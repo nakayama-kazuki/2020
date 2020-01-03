@@ -14,12 +14,12 @@ DoH ‚π——p‚·‚ι‚±‚Ζ‚Ε User-Agent ‚Ζ DNS ƒLƒƒƒbƒVƒ…ƒT[ƒoΤ‚Μ’ΚM‚πu“’®vu‰όβ‚
 - [Mozilla](https://blog.mozilla.org/futurereleases/2019/09/06/whats-next-in-making-dns-over-https-the-default/)
 - [Google](https://blog.chromium.org/2019/09/experimenting-with-same-provider-dns.html)
 
-‚Ζ‚±‚λ‚ª ISP ‚Μ Comcast ‚Ν‚±‚Μ—¬‚κ‚Ι [x‰ϊ΄‚π•\–Ύ](https://www.vice.com/en_us/article/9kembz/comcast-lobbying-against-doh-dns-over-https-encryption-browsing-data) ‚µ‚ά‚µ‚½B<br />
+‚Ζ‚±‚λ‚ª ISP ‚Μ Comcast ‚Ν‚±‚Μ“®‚«‚Ι [x‰ϊ΄‚π•\–Ύ](https://www.vice.com/en_us/article/9kembz/comcast-lobbying-against-doh-dns-over-https-encryption-browsing-data) ‚µ‚ά‚µ‚½B<br />
 ƒvƒ‰ƒbƒgƒtƒH[ƒ}[‚Ι‚ζ‚ι DNS ‚ΜW’†‰»‚ª—lX‚ΘƒƒXƒN‚πψ‚«‹N‚±‚·A‚Ζ‚Ά‚¤ε’£‚Ε‚·B<br />
 
 > The unilateral centralization of DNS raises serious policy issues relating to cybersecurity, privacy, antitrust, national security and law enforcement, network performance and service quality (including 5G), and other areas.
 
-‚µ‚©‚µA‚±‚Με’£‚Ν [ƒvƒ‰ƒbƒgƒtƒH[ƒ}[‚Μ”½‚](https://blog.mozilla.org/blog/2019/11/01/asking-congress-to-examine-isp-data-practices/) ‚πσ‚―‚ά‚·B<br />
+‚µ‚©‚µA‚±‚Με’£‚Ν [ƒvƒ‰ƒbƒgƒtƒH[ƒ}[‚©‚η‚Μ”½‚](https://blog.mozilla.org/blog/2019/11/01/asking-congress-to-examine-isp-data-practices/) ‚πσ‚―‚ά‚·B<br />
 Mozilla H‚­A‚ή‚µ‚λ ISP ‚ªƒf[ƒ^‚π“Ζθ‚µA‰Έ‚β‚©‚Θ‚η‚Κ—p“r‚Ι—p‚µ‚Δ‚Ά‚ι‚Μ‚Ε‚Ν‚Θ‚Ά‚©A‚Ζ‚Ά‚¤‚ν‚―‚Ε‚·B<br />
 
 > These developments have raised serious questions. How is your browsing data being used by those who provide your internet service? Is it being shared with others? And do consumers understand and agree to these practices? We think it's time Congress took a deeper look at ISP practices to figure out what exactly is happening with our data.
@@ -28,14 +28,14 @@ Mozilla H‚­A‚ή‚µ‚λ ISP ‚ªƒf[ƒ^‚π“Ζθ‚µA‰Έ‚β‚©‚Θ‚η‚Κ—p“r‚Ι—p‚µ‚Δ‚Ά‚ι‚Μ‚Ε‚Ν‚
 Χ«‚Θ ISP ‚Θ‚η‚Ξƒ†[ƒU[ƒAƒJƒEƒ“ƒg‚Ζ–Ό‘O‰π—v‹‚π•R‚Γ‚―A‹»–΅ΦSξ•ρ‚Ζ‚µ‚Δ’~Ο`—p‚·‚ι‚±‚Ζ‚ΰ‰Β”\‚Ε‚·B‹°‚λ‚µ‚βI<br />
 
 ‚Ε‚Ν ISP ‚Μ DNS ‚π”π‚―‚Δ DoH ‚π——p‚·‚κ‚ΞA‚±‚ΜƒƒXƒN‚©‚η“¦‚κ‚ι‚±‚Ζ‚ª‚Ε‚«‚ι‚Μ‚Ε‚µ‚ε‚¤‚©H<br />
-[RFC 8484](https://tools.ietf.org/html/rfc8484)‚πm”F‚µ‚Δ‚έ‚ά‚µ‚ε‚¤B<br />
+‚ά‚Έ‚Ν [RFC 8484](https://tools.ietf.org/html/rfc8484)‚πm”F‚µ‚Δ‚έ‚ά‚µ‚ε‚¤B<br />
 
 > HTTP cookies SHOULD NOT be accepted by DOH clients unless they are explicitly required by a use case.
 
 ‚Η‚¤‚β‚η DoH ‚Ε‚Ν Cookie ‚Μ——p‚Ν‹Φ~‚³‚κ‚Δ‚Ά‚Θ‚Ά‚ζ‚¤‚Ε‚·B<br />
 ΐΫ‚Ι [cloudflare ‚Μ Example](https://developers.cloudflare.com/1.1.1.1/dns-over-https/wireformat/) ‚©‚η‚Ν set-cookie ‚ª©‚Β‚©‚θ‚ά‚·B<br />
 
-'''http
+```http
 HTTP/2 200
 date: Fri, 23 Mar 2018 05:14:02 GMT
 content-type: application/dns-message
@@ -45,23 +45,23 @@ set-cookie: \__cfduid=dd1fb65f0185fadf50bbb6cd14ecbc5b01521782042;
     expires=Sat, 23-Mar-19 05:14:02 GMT; path=/; domain=.cloudflare.com; HttpOnly
 server: cloudflare-nginx
 cf-ray: 3ffe69838a418c4c-SFO-DOG
-'''
+```
 
 ‚Ζ‚Ά‚¤‚±‚Ζ‚Ν DoH ‚π——p‚·‚ι User-Agent ‚ªƒuƒ‰ƒEƒU‚Μ HTTP Set-Cookie / HTTP Cookie ƒƒJƒjƒYƒ€‚π“¥P‚·‚ικ‡AΧ«‚ΘƒT[ƒrƒX’ρ‹Ò‚Θ‚η‚Ξ Set-Cookie ‚Ε•t—^‚µ‚½―•Κξ•ρ‚Ζ–Ό‘O‰π—v‹‚π•R‚Γ‚―A‹»–΅ΦSξ•ρ‚Ζ‚µ‚Δ’~Ο`—p‚Ε‚«‚»‚¤‚Ε‚·B‚Θ‚ρ‚Ζ‚Ά‚¤‚±‚Ζ‚Ε‚µ‚ε‚¤I<br />
 
-## Set-Cookie ‚Ν—Lψ‚©H
+## –{“–‚Ι Set-Cookie ‚Ν—Lψ‚©H
 
 ‚Ε‚Ν Firefox 71.0 ‚πg‚ΆAΘ‰Ί‚Μθ‡‚Εΐ±‚µ‚Δ‚έ‚ά‚µ‚ε‚¤B<br />
 
 ### 1. ©‘O DoH ƒT[ƒrƒX‚π—pΣ
 
-΅‰ρ‚Ν 127.0.0.1 γ‚Ι DoH ‰“‚π¶¬‚·‚ι©‘O DoH ƒT[ƒrƒXidoh.phpj‚π—pΣ‚µ‚ά‚µ‚½B<br />
+΅‰ρ‚Ν 127.0.0.1 ‚Μ DocumentRoot γ‚Ι DoH ‰“‚π¶¬‚·‚ι©‘O DoH ƒT[ƒrƒXidoh.phpj‚π—pΣ‚µ‚ά‚µ‚½B<br />
 ‚ ‚ν‚Ή‚ΔΓ“I‚Θ HTML ƒtƒ@ƒCƒ‹ihello.htmlj‚Ζ Cookie ‚Μ‘—σM‚πm”F‚·‚ιƒRƒ“ƒeƒ“ƒcicheck-cookie.phpj‚ΰ—pΣ‚µ‚ά‚·B<br />
 
-``` {.dark}
-https://127.0.0.1/[doh.php]()
-https://127.0.0.1/[hello.html]()
-https://127.0.0.1/[check-cookie.php]()
+```
+https://127.0.0.1/doh.php
+https://127.0.0.1/hello.html
+https://127.0.0.1/check-cookie.php
 ```
 
 ### 2. Firefox ‚Μέ’θ‚π•ΟX
@@ -71,14 +71,14 @@ https://127.0.0.1/[check-cookie.php]()
 - DNS over HTTPS ‚π—Lψ‚Ι‚·‚ιB
 - ƒvƒƒoƒCƒ_[‚πg—p‚Ή‚Έ‚Ι URLi©‘O DoH ƒT[ƒrƒXj‚πw’θ‚·‚ιB
 
-![]i02.pngj
+![](02.png)
 
 about:config ‚Ι‚Δ ...<br />
 
 - network.trr.bootstrapAddress ‚Ι 127.0.0.1 ‚πw’θ‚·‚ιB<br />‚±‚κ‚Ι‚ζ‚θ OS ‚Μ–Ό‘O‰π‚πƒXƒLƒbƒv‚µ‚Δ©‘O DoH ƒT[ƒrƒX‚ΜƒhƒƒCƒ“‚ª 127.0.0.1 ‚Ι‰π‚³‚κ‚ά‚·B
 - network.trr.confirmationNS ‚Ι skip ‚πw’θ‚·‚ιB<br />‚±‚κ‚Ι‚ζ‚θ‹N“®‚Μ“®μƒ`ƒFƒbƒN‚π„¤‚µ‚ά‚·B
 
-![]i02.pngj
+![](03.png)
 
 ‚Θ‚¨ network.trr ‚ΙΦ‚·‚ιΪΧ‚Ν [mozilla wiki](https://wiki.mozilla.org/Trusted_Recursive_Resolver) ‚π‚²m”F‚­‚Ύ‚³‚ΆB
 
@@ -89,7 +89,7 @@ https://my-test-web-service.com/hello.html
 ```
 my-test-web-service.com ‚Μ–Ό‘O‰π‚Μ‚½‚ί‚Ι DoH —v‹‚ª©‘O DoH ƒT[ƒrƒX‚Ι‘—M‚³‚κ‚ά‚·B<br />
 
-```http {.dark}
+```http
 Host: i27.o.o.i
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0
 Accept: application/dns-message
@@ -110,11 +110,11 @@ Connection: keep-alive
 00,00
 ```
 
-©‘O DoH ƒT[ƒrƒX‚©‚η Set-Cookie + DoH ‰“
-‚±‚κ‚ª some-doh-provider.com ƒhƒƒCƒ“‚Μ Cookie ‚Ζ‚µ‚Δµ‚ν‚κ‚ι‚Μ‚©‚Η‚¤‚©‚πγ’φm”F‚µ‚ά‚·B
-‚Ώ‚Θ‚έ‚Ι΅‰ρ‚Ν some-web-service.com ‚ΰ 127.0.0.1 ‚Ι‰π‚µ‚Δ‚Ά‚ά‚·B
+©‘O DoH ƒT[ƒrƒX‚Ν DoH ‰“‚Ζ‚ ‚ν‚Ή‚Δ Set-Cookie ‚π‰“‚µ‚ά‚·B<br />
+‚±‚κ‚ª some-doh-provider.com ƒhƒƒCƒ“‚Μ Cookie ‚Ζ‚µ‚Δµ‚ν‚κ‚ι‚Μ‚©‚Η‚¤‚©‚πγ’φm”F‚µ‚ά‚·B<br />
+‚Ώ‚Θ‚έ‚Ι΅‰ρ‚Ν some-web-service.com ‚ΰ 127.0.0.1 ‚Ι‰π‚µ‚Δ‚Ά‚ά‚·B<br />
 
-```http {.dark}
+```http
 Content-Type: application/dns-message
 Content-Length: 90
 Cache-Control: max-age=0
@@ -148,18 +148,16 @@ https://some-doh-provider.com/check-cookie.php
 
 ‚ªΘ‰Ί‚Μ‚ζ‚¤‚ΘƒRƒ“ƒeƒ“ƒc‚Ύ‚Α‚½κ‡A‘—M‚³‚κ‚½ Cookie ƒwƒbƒ_‚πm”F‚µ‚ά‚·B
 
-<?php
-
+```php
 header('Content-Type: text/plain');
 header("Set-Cookie: www=true; Secure; HttpOnly");
 $arr = apache_request_headers();
 foreach ($arr as $fname => $value) {
 	print "{$fname}: {$value}\n";
 }
+```
 
-?>
-
-i‹‰Κj
+![](04.png)
 
 Set-Cookie: doh=true; Secure; HttpOnly
 ‚Ν‘—M‚³‚κ‚ά‚Ή‚ρ‚Ε‚µ‚½B
