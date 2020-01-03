@@ -53,7 +53,7 @@ Mozilla žH‚­A‚Þ‚µ‚ë ISP ‚ªƒf[ƒ^‚ð“Æè‚µA‰¸‚â‚©‚È‚ç‚Ê—p“r‚ÉŠˆ—p‚µ‚Ä‚¢‚é‚Ì‚Å‚Í‚
 ‚É‚ÍˆÈ‰º‚Ì Example ‚ªŒ©‚Â‚©‚è‚Ü‚·B
 
 > HTTP/2 200
-> date: Fri, 23 Mar 2018 05:14:02 GMT
+> <color='red'>date: Fri, 23 Mar 2018 05:14:02 GMT</red>
 > content-type: application/dns-message
 > content-length: 49
 > cache-control: max-age=0
