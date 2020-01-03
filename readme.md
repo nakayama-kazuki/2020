@@ -52,16 +52,14 @@ Mozilla žH‚­A‚Þ‚µ‚ë ISP ‚ªƒf[ƒ^‚ð“Æè‚µA‰¸‚â‚©‚È‚ç‚Ê—p“r‚ÉŠˆ—p‚µ‚Ä‚¢‚é‚Ì‚Å‚Í‚
 [cloudflare ‚Ì wireformat](https://developers.cloudflare.com/1.1.1.1/dns-over-https/wireformat/)
 ‚É‚ÍˆÈ‰º‚Ì Example ‚ªŒ©‚Â‚©‚è‚Ü‚·B
 
-```
-HTTP/2 200
-date: Fri, 23 Mar 2018 05:14:02 GMT
-content-type: application/dns-message
-content-length: 49
-cache-control: max-age=0
-set-cookie: \__cfduid=dd1fb65f0185fadf50bbb6cd14ecbc5b01521782042; expires=Sat, 23-Mar-19 05:14:02 GMT; path=/; domain=.cloudflare.com; HttpOnly
-server: cloudflare-nginx
-cf-ray: 3ffe69838a418c4c-SFO-DOG
-```
+> HTTP/2 200
+> date: Fri, 23 Mar 2018 05:14:02 GMT
+> content-type: application/dns-message
+> content-length: 49
+> cache-control: max-age=0
+> set-cookie: \__cfduid=dd1fb65f0185fadf50bbb6cd14ecbc5b01521782042; expires=Sat, 23-Mar-19 05:14:02 GMT; path=/; domain=.cloudflare.com; HttpOnly
+> server: cloudflare-nginx
+> cf-ray: 3ffe69838a418c4c-SFO-DOG
 
 ‚Æ‚¢‚¤‚±‚Æ‚Í DoH ‚ð—˜—p‚·‚é User-Agent ‚ªƒuƒ‰ƒEƒU‚Ì HTTP Set-Cookie / HTTP Cookie ƒƒJƒjƒYƒ€‚ð“¥P‚·‚éê‡AŽ×ˆ«‚ÈƒT[ƒrƒX’ñ‹ŸŽÒ‚È‚ç‚Î Set-Cookie ‚Å•t—^‚µ‚½Ž¯•Êî•ñ‚Æ–¼‘O‰ðŒˆ—v‹‚ð•R‚Ã‚¯A‹»–¡ŠÖSî•ñ‚Æ‚µ‚Ä’~Ï`Šˆ—p‚Å‚«‚»‚¤‚Å‚·B‚È‚ñ‚Æ‚¢‚¤‚±‚Æ‚Å‚µ‚å‚¤I
 
