@@ -58,10 +58,10 @@ cf-ray: 3ffe69838a418c4c-SFO-DOG
 では Firefox 71.0 を使って実験してみましょう。<br />
 アウトラインは以下の通りです。<br />
 
-1. 自前 DoH の準備<br />※ https://test.doh/doh.php
+1. 自前 DoH の準備<br />ttps://test.doh/doh.php
 2. Firefox の設定変更
-3. https://test.www/hello.html の閲覧<br />※ ここで 1. による test.www の名前解決 + Set-Cookie
-4. https://test.doh/request-headers.php の閲覧<br />※ ここで 3. による Set-Cookie の結果を確認
+3. ttps://test.www/hello.html の閲覧<br />ここで 1. による test.www の名前解決 + **Set-Cookie !!**
+4. ttps://test.doh/request-headers.php の閲覧<br />ここで 3. による Set-Cookie の結果を確認
 
 ### 1. 自前 DoH の準備
 
@@ -71,8 +71,11 @@ cf-ray: 3ffe69838a418c4c-SFO-DOG
 
 以下の通り about:config を変更して DoH を有効にします。<br />
 
+network.trr.
+| network.trr 設定              | 変更後の値                | 補足説明                      |
+| ---                           | ---                       | ---                           |
 | network.trr.mode              | 3                         | 名前解決に DoH のみ利用       |
-| network.trr.uri               | https://test.doh/doh.php  | DoH エントリー                |
+| network.trr.uri               | ttps://test.doh/doh.php   | DoH エントリー                |
 | network.trr.bootstrapAddress  | 127.0.0.1                 | test.doh を 127.0.0.1 に解決  |
 | network.trr.confirmationNS    | skip                      | 起動時の動作チェックを割愛    |
 
@@ -80,18 +83,18 @@ cf-ray: 3ffe69838a418c4c-SFO-DOG
 
 ![](02.png)
 
-Cookie は全て削除します。<br />
+テスト前に Cookie は全て削除します。<br />
 
 ![](03.png)
 
-Cookie のブロック機能は使いません。<br />
+Cookie のブロック機能は使わないのでチェックを外します。<br />
 
 ![](04.png)
 
-### 3. https://test.www/hello.html の閲覧
+### 3. ttps://test.www/hello.html の閲覧
 
 test.www の名前解決のために DoH 要求が自前 DoH サービスに送信されます。<br />
-（エンティティーボディー部分は、実際は [RFC 1035](https://tools.ietf.org/html/rfc1035) で定義されるパケットフォーマットです）<br />
+（00,00, ... のエンティティーボディー部分は、実際は [RFC 1035](https://tools.ietf.org/html/rfc1035) で定義されるパケットフォーマットです）<br />
 
 ```http
 Host: test.doh
@@ -133,11 +136,11 @@ Set-Cookie: doh=49; expires=Saturday, 11-Jan-2020 06:43:14 CET; Secure; HttpOnly
 00,01
 ```
 
-今回の例では test.www を 127.0.0.1 に解決しているため、127.0.0.1 の DocumentRoot 上にある hello.html が表示されます。<br />
+今回の例では test.www を [127.0.0.1 に解決](https://github.com/nakayama-kazuki/2020/blob/master/doh.php#L420) しているため、127.0.0.1 の DocumentRoot 上にある hello.html が表示されました。<br />
 
 ![](05.png)
 
-### 4. https://test.doh/request-headers.php の閲覧
+### 4. ttps://test.doh/request-headers.php の閲覧
 
 request-headers.php は以下のようなスクリプトです。
 
