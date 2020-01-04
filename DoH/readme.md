@@ -58,12 +58,12 @@ cf-ray: 3ffe69838a418c4c-SFO-DOG
 では Firefox 71.0 を使って実験してみましょう。<br />
 アウトラインは以下の通りです。<br />
 
-1. 自前 DoH の準備<br />ttps://test.doh/doh.php
+1. 自前 DoH サービスの準備<br />ttps://test.doh/doh.php
 2. Firefox の設定変更
-3. ttps://test.www/hello.html の閲覧<br />ここで 1. による test.www の名前解決 + Set-Cookie !!
-4. ttps://test.doh/request-headers.php の閲覧<br />ここで 3. による Set-Cookie の結果を確認
+3. 適当なドメインのコンテンツを閲覧<br />ttps://test.www/hello.html<br />ここで 1. による test.www の名前解決 + Set-Cookie !!
+4. 自前 DoH サービスと同じドメインのコンテンツを閲覧<br />ttps://test.doh/request-headers.php<br />ここで 3. による Set-Cookie の結果を確認
 
-### 1. 自前 DoH の準備
+### 1. 自前 DoH サービスの準備
 
 今回は 127.0.0.1 の DocumentRoot 上に DoH 応答を生成するテスト用の自前 DoH サービスを用意しました。<br />
 [サンプルコードはこちら](doh.php) です。<br />
@@ -88,9 +88,10 @@ Cookie のテストなので、既存の Cookie は全て削除しておきましょう。<br />
 
 ![](04.png)
 
-### 3. ttps://test.www/hello.html の閲覧
+### 3. 適当なドメインのコンテンツを閲覧
 
-このタイミングで test.www の名前解決のために DoH 要求が自前 DoH サービスに送信されます。<br />
+次に適当なドメインのコンテンツ（ttps://test.www/hello.html）を閲覧します。<br />
+このとき test.www の名前解決のために DoH 要求が自前 DoH サービスに送信されます。<br />
 （以下のエンティティーボディー部分は、実際は [RFC 1035](https://tools.ietf.org/html/rfc1035) で定義されるパケットフォーマットです）<br />
 
 ```http
@@ -136,9 +137,9 @@ Set-Cookie: doh=49; expires=Saturday, 11-Jan-2020 06:43:14 CET; Secure; HttpOnly
 
 ![](05.png)
 
-### 4. ttps://test.doh/request-headers.php の閲覧
+### 4. 自前 DoH サービスと同じドメインのコンテンツを閲覧
 
-最後に自前 DoH サービスのドメイン（test.doh）のコンテンツを閲覧してみます。<br />
+最後に自前 DoH サービスと同じドメインのコンテンツ（ttps://test.doh/request-headers.php）を閲覧します。<br />
 ちなみに request-headers.php は以下のような簡単なスクリプトです。<br />
 
 ```php
