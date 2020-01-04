@@ -1,14 +1,13 @@
 # DoH + Set-Cookie ‚Ε‹»–΅ΦS‚ªΫ—‡IH
 
 ‚±‚ρ‚Ι‚Ώ‚ΝALƒGƒ“ƒWƒjƒA‚Μ’†R‚Ε‚·B<br />
-F‚³‚ρ‚Ν DNS over HTTPSiΘ‰Ί DoHj‚π‚³‚κ‚ά‚µ‚½‚©H
+F‚³‚ρ‚Ν DNS over HTTPSiΘ‰Ί DoHj‚π‚³‚κ‚ά‚µ‚½‚©H<br />
 DoH ‚π——p‚·‚ι‚±‚Ζ‚ΕAUser-Agent ‚Ζ DNS ƒLƒƒƒbƒVƒ…ƒT[ƒoΤ‚Μ’ΚM‚πu“’®vu‰όβ‚vu‚Θ‚θ‚·‚ά‚µv‚©‚ηη‚ι‚±‚Ζ‚ª‚Ε‚«‚ά‚·B<br />
 [Mozilla](https://wiki.mozilla.org/Trusted_Recursive_Resolver) ‚Ι‚ζ‚κ‚ΞA<br />
 
 > DNS-over-HTTPS (DoH) allows DNS to be resolved with enhanced privacy, secure transfers and improved performance.
 
-ƒvƒ‰ƒCƒoƒV[•Ϋμ‚ΖƒZƒLƒ…ƒƒeƒB[όγ‚ªϊ‘Ò‚³‚κ‚Δ‚Ά‚ά‚·B<br />
-‚ά‚½
+‚Ύ‚»‚¤‚Ε‚·B‚ά‚½
 [Microsoft](https://techcommunity.microsoft.com/t5/Networking-Blog/Windows-will-improve-user-privacy-with-DNS-over-HTTPS/ba-p/1014229)
 ‚β
 [Google](https://blog.chromium.org/2019/09/experimenting-with-same-provider-dns.html)
@@ -19,7 +18,7 @@ DoH ‚π——p‚·‚ι‚±‚Ζ‚ΕAUser-Agent ‚Ζ DNS ƒLƒƒƒbƒVƒ…ƒT[ƒoΤ‚Μ’ΚM‚πu“’®vu‰όβ‚
 ## DoH ‚Φ‚Μ”O
 
 ‚Ζ‚±‚λ‚ª ISP ‚Μ Comcast ‚Νƒvƒ‰ƒbƒgƒtƒH[ƒ}[‚Μ‚±‚Μ“®‚«‚Ι [x‰ϊ΄‚π•\–Ύ](https://www.vice.com/en_us/article/9kembz/comcast-lobbying-against-doh-dns-over-https-encryption-browsing-data) ‚µ‚ά‚µ‚½B<br />
-ƒvƒ‰ƒbƒgƒtƒH[ƒ}[‚Ι‚ζ‚ι DNS ‚ΜW’†‰»‚ª—lX‚ΘƒƒXƒN‚πψ‚«‹N‚±‚·A‚Ζε’£‚µ‚Δ‚Ά‚ά‚·B<br />
+ƒvƒ‰ƒbƒgƒtƒH[ƒ}[‚Ι‚ζ‚ι DNS ‚ΜW’†‰»‚ª—lX‚ΘƒƒXƒN‚πψ‚«‹N‚±‚·A‚Ζ‚Με’£‚Ε‚·B<br />
 
 > The unilateral centralization of DNS raises serious policy issues relating to cybersecurity, privacy, antitrust, national security and law enforcement, network performance and service quality (including 5G), and other areas.
 
@@ -37,7 +36,7 @@ Mozilla H‚­A‚ή‚µ‚λ ISP ‚ªƒf[ƒ^‚π“Ζθ‚µA‰Έ‚β‚©‚Θ‚η‚Κ—p“r‚Ι—p‚µ‚Δ‚Ά‚ι‚Μ‚Ε‚Ν‚
 > HTTP cookies SHOULD NOT be accepted by DOH clients unless they are explicitly required by a use case.
 
 ‚Η‚¤‚β‚η DoH ‚Ε‚Ν Cookie ‚Μ——p‚Ν‹Φ~‚³‚κ‚Δ‚Ά‚Θ‚Ά‚ζ‚¤‚Ε‚·B<br />
-ΐΫ‚Ι [cloudflare ‚Μ Example](https://developers.cloudflare.com/1.1.1.1/dns-over-https/wireformat/) ‚Ι‚Ν set-cookie ‚ª©‚Β‚©‚θ‚ά‚·B<br />
+ΐΫ‚Ι [cloudflare ‚Μ Example](https://developers.cloudflare.com/1.1.1.1/dns-over-https/wireformat/) ‚Ι‚Ν set-cookie ‚π—p‚Ά‚ι—α‚ª‚ ‚θ‚ά‚·B<br />
 
 ```http
 HTTP/2 200
@@ -69,30 +68,27 @@ cf-ray: 3ffe69838a418c4c-SFO-DOG
 
 ### 2. Firefox ‚Μέ’θ•ΟX
 
-Θ‰Ί‚Μ’Κ‚θ about:config ‚©‚ηέ’θ•ΟX‚µ‚Δ DoH ‚π—Lψ‚Ι‚µ‚ά‚·B<br />
+about:config ‚Ι‚ΔΘ‰Ί‚Μ’Κ‚θέ’θ•ΟX‚µ‚Δ DoH ‚π—Lψ‚Ι‚µ‚ά‚·B<br />
 
-| network.trr έ’θ              | •ΟXγ‚Μ’l                | •β‘«ΰ–Ύ                      |
+| network.trr ‚Μέ’θ            | •ΟXγ‚Μ’l                | •β‘«ΰ–Ύ                      |
 | ---                           | ---                       | ---                           |
 | network.trr.mode              | 3                         | –Ό‘O‰π‚Ι DoH ‚Μ‚έ——p       |
 | network.trr.uri               | ttps://test.doh/doh.php   | DoH ƒGƒ“ƒgƒ[                |
 | network.trr.bootstrapAddress  | 127.0.0.1                 | test.doh ‚π 127.0.0.1 ‚Ι‰π  |
 | network.trr.confirmationNS    | skip                      | ‹N“®‚Μ“®μƒ`ƒFƒbƒN‚π„¤    |
 
-‰Α‚¦‚Δ Firefox ‚Ι test.doh ƒT[ƒoΨ–Ύ‘•Ϋ‚µ‚ά‚·B<br />
+‰Α‚¦‚Δ test.doh ‚ΜƒT[ƒoΨ–Ύ‘‚π“o^‚µ‚Δ‚¨‚«‚ά‚·B<br />
 
 ![](02.png)
 
-ƒeƒXƒg‘O‚Ι Cookie ‚Ν‘S‚Δν‚µ‚ά‚·B<br />
-
-![](03.png)
-
-Cookie ‚ΜƒuƒƒbƒN‹@”\‚Νg‚ν‚Θ‚Ά‚Μ‚Εƒ`ƒFƒbƒN‚πO‚µ‚ά‚·B<br />
+Cookie ‚ΜƒeƒXƒg‚Θ‚Μ‚ΕAω‘¶‚Μ Cookie ‚Ν‘S‚Δν‚µ‚Δ‚¨‚«‚ά‚µ‚ε‚¤B<br />
+Εγ‚Ι Cookie ‚ΜƒuƒƒbƒN‹@”\‚Νg‚ν‚Θ‚Ά‚Μ‚Εƒ`ƒFƒbƒN‚πO‚µ‚ά‚·B<br />
 
 ![](04.png)
 
 ### 3. ttps://test.www/hello.html ‚Μ‰{——
 
-test.www ‚Μ–Ό‘O‰π‚Μ‚½‚ί‚Ι DoH —v‹‚ª©‘O DoH ƒT[ƒrƒX‚Ι‘—M‚³‚κ‚ά‚·B<br />
+‚±‚Μƒ^ƒCƒ~ƒ“ƒO‚Ε test.www ‚Μ–Ό‘O‰π‚Μ‚½‚ί‚Ι DoH —v‹‚ª©‘O DoH ƒT[ƒrƒX‚Ι‘—M‚³‚κ‚ά‚·B<br />
 i00,00, ... ‚ΜƒGƒ“ƒeƒBƒeƒB[ƒ{ƒfƒB[•”•ª‚ΝAΐΫ‚Ν [RFC 1035](https://tools.ietf.org/html/rfc1035) ‚Ε’θ‹`‚³‚κ‚ιƒpƒPƒbƒgƒtƒH[ƒ}ƒbƒg‚Ε‚·j<br />
 
 ```http
@@ -135,13 +131,14 @@ Set-Cookie: doh=49; expires=Saturday, 11-Jan-2020 06:43:14 CET; Secure; HttpOnly
 00,01
 ```
 
-΅‰ρ‚Μ—α‚Ε‚Ν test.www ‚π [127.0.0.1 ‚Ι‰π](https://github.com/nakayama-kazuki/2020/blob/master/doh.php#L420) ‚µ‚Δ‚Ά‚ι‚½‚ίA127.0.0.1 ‚Μ DocumentRoot γ‚Ι‚ ‚ι hello.html ‚ª•\¦‚³‚κ‚ά‚µ‚½B<br />
+΅‰ρ‚Ν test.www ‚π [127.0.0.1 ‚Ι‰π](https://github.com/nakayama-kazuki/2020/blob/master/doh.php#L420) ‚µ‚Δ‚Ά‚ι‚½‚ίA127.0.0.1 ‚Μ DocumentRoot γ‚Μ hello.html ‚ª•\¦‚³‚κ‚ά‚µ‚½B<br />
 
 ![](05.png)
 
 ### 4. ttps://test.doh/request-headers.php ‚Μ‰{——
 
-request-headers.php ‚ΝΘ‰Ί‚Μ‚ζ‚¤‚ΘƒXƒNƒƒvƒg‚Ε‚·B
+‚Ά‚ζ‚Ά‚ζ©‘O DoH ƒT[ƒrƒX‚ΜƒhƒƒCƒ“itest.dohj‚π‰{——‚µ‚Δ‚έ‚ά‚·B<br />
+‚±‚Μ request-headers.php ‚ΝΘ‰Ί‚Μ‚ζ‚¤‚ΘΘ’P‚ΘƒXƒNƒƒvƒg‚Ε‚·B<br />
 
 ```php
 header('Content-Type: text/plain');
@@ -151,7 +148,7 @@ foreach ($headers as $field => $value) {
 }
 ```
 
-‚ΰ‚µζ’φ‚Μ©‘O DoH ƒT[ƒrƒX‚©‚η‚Μ Set-Cookie ‚ª—Lψ‚Θ‚η‚ΞAγ‹L apache_request_headers() ‚Ι‚Ν Firefox ‚©‚η‘—M‚³‚κ‚½ Cookie ƒwƒbƒ_‚ªά‚ά‚κ‚Δ‚Ά‚ι‚Ν‚Έ‚Ε‚·B‚³‚ΔA‹‰Κ‚Ν ...<br />
+‚ΰ‚µζ’φ‚Μ©‘O DoH ƒT[ƒrƒX‚©‚η‚Μ Set-Cookie ‚ª—Lψ‚Θ‚η‚ΞAƒXƒNƒƒvƒg‚Μ apache_request_headers() ‚Ι‚Ν Firefox ‚©‚η‘—M‚³‚κ‚½ Cookie ƒwƒbƒ_‚ªά‚ά‚κ‚Δ‚Ά‚ι‚Ν‚Έ‚Ε‚ªA‹‰Κ‚Ν ...<br />
 
 ![](06.png)
 
