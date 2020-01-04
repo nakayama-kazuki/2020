@@ -133,7 +133,7 @@ Set-Cookie: doh=49; expires=Saturday, 11-Jan-2020 06:43:14 CET; Secure; HttpOnly
 00,01
 ```
 
-今回は test.www を [127.0.0.1 に解決](https://github.com/nakayama-kazuki/2020/blob/master/doh.php#L420) しているため、127.0.0.1 の DocumentRoot 上の hello.html が表示されました。<br />
+今回は test.www を [127.0.0.1 に解決](https://github.com/nakayama-kazuki/2020/blob/master/DoH/doh.php#L420) しているため、127.0.0.1 の DocumentRoot 上の hello.html が表示されました。<br />
 
 ![](05.png)
 
