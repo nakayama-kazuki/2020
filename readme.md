@@ -69,9 +69,8 @@ cf-ray: 3ffe69838a418c4c-SFO-DOG
 
 ### 2. Firefox ‚ÌÝ’è•ÏX
 
-ˆÈ‰º‚Ì’Ê‚è about:config ‚ð•ÏX‚µ‚Ä DoH ‚ð—LŒø‚É‚µ‚Ü‚·B<br />
+ˆÈ‰º‚Ì’Ê‚è about:config ‚©‚çÝ’è•ÏX‚µ‚Ä DoH ‚ð—LŒø‚É‚µ‚Ü‚·B<br />
 
-network.trr.
 | network.trr Ý’è              | •ÏXŒã‚Ì’l                | •â‘«à–¾                      |
 | ---                           | ---                       | ---                           |
 | network.trr.mode              | 3                         | –¼‘O‰ðŒˆ‚É DoH ‚Ì‚Ý—˜—p       |
@@ -167,7 +166,6 @@ Firefox 71.0 ‚ÌŽÀ‘•‚Å‚Í DoH ‰ž“š‚Ì Set-Cookie ‚Í–³Ž‹‚³‚ê‚é‚½‚ßAŽ×ˆ«‚È DoH ƒT[ƒ
 ŒÌ‚É DoH ‚ð—˜—p‚µ‚½–¼‘O‰ðŒˆ‚Í]—ˆ‚Ì•û–@‚æ‚è‚àƒvƒ‰ƒCƒoƒV[ƒZ[ƒt‚Å‚ ‚éA‚ÆŒ¾‚¦‚»‚¤‚Å‚·B<br />
 ŠF‚³‚ñ‚à‘¼‚Ìƒuƒ‰ƒEƒU‚ð—p‚¢‚ÄŽÀŒ±‚µ‚Ä‚Ý‚Ä‚­‚¾‚³‚¢B<br />
 
-—]’k‚Å‚·‚ª Web ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌŠJ”­`ƒeƒXƒg‚ÌÛ‚É‚Í‚µ‚Î‚µ‚Î hosts ‚ð•ÏX‚µ‚Ü‚·‚ªA‚½‚Ü‚ÉÝ’èƒ~ƒX‚âŒ³‚É–ß‚·‚Ì‚ð–Y‚ê‚Äƒnƒ}‚él‚ðŒ©‚©‚¯‚Ü‚·B<br />
-“¯‚¶ŠÂ‹«‚ÅŠJ”­`ƒeƒXƒg‚ð‚µ‚Ä‚¢‚éƒOƒ‹[ƒvŒü‚¯‚ÌÝ’è‚ð DoH ƒT[ƒrƒX‚Å’ñ‹Ÿ‚µAƒeƒXƒgŽÀŽ{ŽÒ‚Í User-Agent ‚Ì DoH ‚ð on/off ‚·‚é‚±‚Æ‚Å—˜—p‚·‚éŠÂ‹«‚ðØ‚è‘Ö‚¦‚é ... ‚È‚ñ‚Ä‰^—p‚Åi‘Oq‚Ìƒ~ƒX‚àŒ¸‚Á‚Äj¶ŽY«‚ð‚‚ß‚ç‚ê‚»‚¤‚Å‚·‚ËB<br />
+—]’k‚Å‚·‚ª Web ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌŠJ”­`ƒeƒXƒg‚ÌÛ‚É‚Í‚µ‚Î‚µ‚Î hosts ‚ð•ÏX‚µ‚Ü‚·‚ªA‚½‚Ü‚ÉÝ’èƒ~ƒX‚âŒ³‚É–ß‚·‚Ì‚ð–Y‚ê‚Äƒnƒ}‚él‚ðŒ©‚©‚¯‚Ü‚·B“¯‚¶ŠÂ‹«‚ÅŠJ”­`ƒeƒXƒg‚ð‚µ‚Ä‚¢‚éƒOƒ‹[ƒvŒü‚¯‚ÌÝ’è‚ð DoH ƒT[ƒrƒX‚Å’ñ‹Ÿ‚µAƒeƒXƒgŽÀŽ{ŽÒ‚Í User-Agent ‚Ì DoH ‚ð on/off ‚·‚é‚±‚Æ‚Å—˜—p‚·‚éŠÂ‹«‚ðØ‚è‘Ö‚¦‚é ... ‚È‚ñ‚Ä‰^—p‚Åi‘Oq‚Ìƒ~ƒX‚àŒ¸‚Á‚Äj¶ŽY«‚ð‚‚ß‚ç‚ê‚»‚¤‚Å‚·‚ËB<br />
 
-‚³‚ç‚É—]’k‚Å‚·‚ª Cookie ‚ð‚¨‚©‚í‚è‚µ‚½‚¢•û‚Í [tecoscore](https://www.techscore.com/blog/author/nakayama-kazuki/) ‚à‚Ç‚¤‚¼ :-p
+‚³‚ç‚É—]’k‚Å‚·‚ª Cookie ‚ð‚¨‚©‚í‚è‚µ‚½‚¢•û‚Í [techscore blog](https://www.techscore.com/blog/author/nakayama-kazuki/) ‚à‚Ç‚¤‚¼ :-p
