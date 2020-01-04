@@ -8,7 +8,7 @@ DoH ‚π——p‚·‚ι‚±‚Ζ‚ΕAUser-Agent ‚Ζ DNS ƒLƒƒƒbƒVƒ…ƒT[ƒoΤ‚Μ’ΚM‚πu“’®vu‰όβ‚
 > DNS-over-HTTPS (DoH) allows DNS to be resolved with enhanced privacy, secure transfers and improved performance.
 
 ‚Ύ‚»‚¤‚Ε‚·B<br />
-‚»‚µ‚Δ
+‚³‚η‚Ι
 [Microsoft](https://techcommunity.microsoft.com/t5/Networking-Blog/Windows-will-improve-user-privacy-with-DNS-over-HTTPS/ba-p/1014229)
 ‚β
 [Google](https://blog.chromium.org/2019/09/experimenting-with-same-provider-dns.html)
@@ -37,7 +37,7 @@ Mozilla H‚­A‚ή‚µ‚λ ISP ‚ªƒf[ƒ^‚π“Ζθ‚µA‰Έ‚β‚©‚Θ‚η‚Κ—p“r‚Ι—p‚µ‚Δ‚Ά‚ι‚Μ‚Ε‚Ν‚
 > HTTP cookies SHOULD NOT be accepted by DOH clients unless they are explicitly required by a use case.
 
 DoH ‚Ε‚Ν Cookie ‚Μ——p‚Ν‹Φ~‚³‚κ‚Δ‚Ά‚Θ‚Ά‚ζ‚¤‚Ε‚·B<br />
-[cloudflare ‚Μ Example](https://developers.cloudflare.com/1.1.1.1/dns-over-https/wireformat/) ‚Ι‚Ν set-cookie ‚π—p‚Ά‚ι—α‚ª©‚Β‚©‚θ‚ά‚·B<br />
+[cloudflare ‚Μ Example](https://developers.cloudflare.com/1.1.1.1/dns-over-https/wireformat/) ‚Ι‚ΰ set-cookie ‚π—p‚Ά‚ι—α‚ª©‚Β‚©‚θ‚ά‚·B<br />
 
 ```http
 HTTP/2 200
@@ -84,14 +84,14 @@ about:config ‚Ι‚ΔΘ‰Ί‚Μ’Κ‚θέ’θ•ΟX‚µ‚Δ DoH ‚π—Lψ‚Ι‚µ‚ά‚·B<br />
 ![](02.png)
 
 Cookie ‚ΜƒeƒXƒg‚Θ‚Μ‚ΕAω‘¶‚Μ Cookie ‚Ν‘S‚Δν‚µ‚Δ‚¨‚«‚ά‚µ‚ε‚¤B<br />
-Εγ‚Ι Cookie ‚ΜƒuƒƒbƒN‹@”\‚Νg‚ν‚Θ‚Ά‚Μ‚Εƒ`ƒFƒbƒN‚πO‚µ‚ά‚·B<br />
+‚ά‚½ Cookie ‚ΜƒuƒƒbƒN‹@”\‚Νg‚ν‚Θ‚Ά‚Μ‚Εƒ`ƒFƒbƒN‚πO‚µ‚ά‚·B<br />
 
 ![](04.png)
 
 ### 3. ttps://test.www/hello.html ‚Μ‰{——
 
 ‚±‚Μƒ^ƒCƒ~ƒ“ƒO‚Ε test.www ‚Μ–Ό‘O‰π‚Μ‚½‚ί‚Ι DoH —v‹‚ª©‘O DoH ƒT[ƒrƒX‚Ι‘—M‚³‚κ‚ά‚·B<br />
-i00,00, ... ‚ΜƒGƒ“ƒeƒBƒeƒB[ƒ{ƒfƒB[•”•ª‚ΝAΐΫ‚Ν [RFC 1035](https://tools.ietf.org/html/rfc1035) ‚Ε’θ‹`‚³‚κ‚ιƒpƒPƒbƒgƒtƒH[ƒ}ƒbƒg‚Ε‚·j<br />
+iΘ‰Ί‚ΜƒGƒ“ƒeƒBƒeƒB[ƒ{ƒfƒB[•”•ª‚ΝAΐΫ‚Ν [RFC 1035](https://tools.ietf.org/html/rfc1035) ‚Ε’θ‹`‚³‚κ‚ιƒpƒPƒbƒgƒtƒH[ƒ}ƒbƒg‚Ε‚·j<br />
 
 ```http
 Host: test.doh
@@ -113,7 +113,6 @@ Connection: keep-alive
 ```
 
 ©‘O DoH ƒT[ƒrƒX‚Ν DoH ‰“‚Ζ‚ ‚ν‚Ή‚ΔƒeƒXƒg—p‚Μ Set-Cookie ‚π‰“‚µ‚ά‚·B<br />
-γ’φ‚±‚Μ’lidoh=49j‚ª Firefox ‚Ι‚Η‚¤µ‚ν‚κ‚ι‚Μ‚©‚πm”F‚µ‚ά‚·B<br />
 
 ```http
 Content-Type: application/dns-message
@@ -139,7 +138,7 @@ Set-Cookie: doh=49; expires=Saturday, 11-Jan-2020 06:43:14 CET; Secure; HttpOnly
 
 ### 4. ttps://test.doh/request-headers.php ‚Μ‰{——
 
-‚Ά‚ζ‚Ά‚ζ©‘O DoH ƒT[ƒrƒX‚ΜƒhƒƒCƒ“itest.dohj‚ΜƒRƒ“ƒeƒ“ƒc‚π‰{——‚µ‚Δ‚έ‚ά‚·B<br />
+Εγ‚Ι©‘O DoH ƒT[ƒrƒX‚ΜƒhƒƒCƒ“itest.dohj‚ΜƒRƒ“ƒeƒ“ƒc‚π‰{——‚µ‚Δ‚έ‚ά‚·B<br />
 ‚Ώ‚Θ‚έ‚Ι request-headers.php ‚ΝΘ‰Ί‚Μ‚ζ‚¤‚ΘΘ’P‚ΘƒXƒNƒƒvƒg‚Ε‚·B<br />
 
 ```php
@@ -156,18 +155,18 @@ foreach ($headers as $field => $value) {
 Set-Cookie: doh=49; expires=Saturday, 11-Jan-2020 06:43:14 CET; Secure; HttpOnly
 ```
 
-‚ª—Lψ‚Θ‚η‚Ξ Firefox ‚Ν ttps://test.doh/request-headers.php ‰{——‚ΜΫ‚Ι
+‚ª—Lψ‚Θ‚η‚Ξ Firefox ‚ΝƒRƒ“ƒeƒ“ƒc‰{——‚ΜΫ‚Ι
 
 ```http
 Cookie: doh=49
 ```
 
-‚π‘—M‚·‚ι‚Ν‚Έ‚Ε‚·‚ªA‰Κ‚½‚µ‚Δ‹‰Κ‚Ν ...<br />
+‚π‘—M‚µ apache_request_headers() ‚Ι‚»‚Μ“ΰ—e‚ªά‚ά‚κ‚ι‚Ν‚Έ‚Ε‚·‚ªA‰Κ‚½‚µ‚Δ‹‰Κ‚Ν ...<br />
 
 ![](06.png)
 
 ‚Η‚¤‚β‚η Firefox ‚Ν Cookie ‚π‘—M‚µ‚Θ‚©‚Α‚½‚ζ‚¤‚Ε‚·B<br />
-•Ϋ‘¶‚³‚κ‚½ Cookie ‚ΰ‚ ‚θ‚ά‚Ή‚ρ‚Ε‚µ‚½B<br />
+Cookie ‚ΰ•Ϋ‘¶‚³‚κ‚Δ‚Ά‚ά‚Ή‚ρ‚Ε‚µ‚½B<br />
 
 ![](07.png)
 
