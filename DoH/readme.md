@@ -3,11 +3,12 @@
 ‚±‚ρ‚Ι‚Ώ‚ΝALƒGƒ“ƒWƒjƒA‚Μ’†R‚Ε‚·B<br />
 F‚³‚ρ‚Ν DNS over HTTPSiΘ‰Ί DoHj‚π‚³‚κ‚ά‚µ‚½‚©H<br />
 DoH ‚π——p‚·‚ι‚±‚Ζ‚ΕAUser-Agent ‚Ζ DNS ƒLƒƒƒbƒVƒ…ƒT[ƒoΤ‚Μ’ΚM‚πu“’®vu‰όβ‚vu‚Θ‚θ‚·‚ά‚µv‚©‚ηη‚ι‚±‚Ζ‚ª‚Ε‚«‚ά‚·B<br />
-[Mozilla](https://wiki.mozilla.org/Trusted_Recursive_Resolver) ‚Ι‚ζ‚κ‚ΞA<br />
+[Mozilla ‚Ι‚ζ‚κ‚Ξ](https://wiki.mozilla.org/Trusted_Recursive_Resolver)<br />
 
 > DNS-over-HTTPS (DoH) allows DNS to be resolved with enhanced privacy, secure transfers and improved performance.
 
-‚Ύ‚»‚¤‚Ε‚·B‚ά‚½
+‚Ύ‚»‚¤‚Ε‚·B<br />
+‚»‚µ‚Δ
 [Microsoft](https://techcommunity.microsoft.com/t5/Networking-Blog/Windows-will-improve-user-privacy-with-DNS-over-HTTPS/ba-p/1014229)
 ‚β
 [Google](https://blog.chromium.org/2019/09/experimenting-with-same-provider-dns.html)
@@ -35,8 +36,8 @@ Mozilla H‚­A‚ή‚µ‚λ ISP ‚ªƒf[ƒ^‚π“Ζθ‚µA‰Έ‚β‚©‚Θ‚η‚Κ—p“r‚Ι—p‚µ‚Δ‚Ά‚ι‚Μ‚Ε‚Ν‚
 
 > HTTP cookies SHOULD NOT be accepted by DOH clients unless they are explicitly required by a use case.
 
-‚Η‚¤‚β‚η DoH ‚Ε‚Ν Cookie ‚Μ——p‚Ν‹Φ~‚³‚κ‚Δ‚Ά‚Θ‚Ά‚ζ‚¤‚Ε‚·B<br />
-ΐΫ‚Ι [cloudflare ‚Μ Example](https://developers.cloudflare.com/1.1.1.1/dns-over-https/wireformat/) ‚Ι‚Ν set-cookie ‚π—p‚Ά‚ι—α‚ª‚ ‚θ‚ά‚·B<br />
+DoH ‚Ε‚Ν Cookie ‚Μ——p‚Ν‹Φ~‚³‚κ‚Δ‚Ά‚Θ‚Ά‚ζ‚¤‚Ε‚·B<br />
+[cloudflare ‚Μ Example](https://developers.cloudflare.com/1.1.1.1/dns-over-https/wireformat/) ‚Ι‚Ν set-cookie ‚π—p‚Ά‚ι—α‚ª©‚Β‚©‚θ‚ά‚·B<br />
 
 ```http
 HTTP/2 200
@@ -50,7 +51,7 @@ server: cloudflare-nginx
 cf-ray: 3ffe69838a418c4c-SFO-DOG
 ```
 
-‚Ζ‚Ά‚¤‚±‚Ζ‚Ν DoH ‚π——p‚·‚ι User-Agent ‚ª Web ƒuƒ‰ƒEƒWƒ“ƒO‚Μ HTTP Set-Cookie / HTTP Cookie ƒƒJƒjƒYƒ€‚π“¥P‚·‚ικ‡AΧ«‚ΘƒT[ƒrƒX’ρ‹Ò‚Θ‚η‚Ξ Set-Cookie ‚Ε•t—^‚µ‚½―•Κξ•ρ‚Ζ–Ό‘O‰π—v‹‚π•R‚Γ‚―A‹»–΅ΦSξ•ρ‚Ζ‚µ‚Δ’~Ο`—p‚Ε‚«‚Δ‚µ‚ά‚Ά‚»‚¤‚Ε‚·B‚Θ‚ρ‚Ζ‚Ά‚¤‚±‚Ζ‚Ε‚µ‚ε‚¤I<br />
+‚Ζ‚Ά‚¤‚±‚Ζ‚Ν DoH ‚π——p‚·‚ι User-Agent ‚ª Web ƒuƒ‰ƒEƒWƒ“ƒO‚Μ HTTP Set-Cookie / HTTP Cookie ƒƒJƒjƒYƒ€‚π“¥P‚·‚ικ‡ASet-Cookie ‚Ε•t—^‚µ‚½―•Κξ•ρ‚Ζ–Ό‘O‰π—v‹‚π•R‚Γ‚―A‹»–΅ΦSξ•ρ‚Ζ‚µ‚Δ’~Ο`—p‚·‚ι‚±‚Ζ‚ª‚Ε‚«‚Δ‚µ‚ά‚Ά‚»‚¤‚Ε‚·B‚Θ‚ρ‚Ζ‚Ά‚¤‚±‚Ζ‚Ε‚µ‚ε‚¤I<br />
 
 ## DoH + Set-Cookie ‚Ν—Lψ‚©H
 
@@ -59,12 +60,13 @@ cf-ray: 3ffe69838a418c4c-SFO-DOG
 
 1. ©‘O DoH ‚Μ€”υ<br />ttps://test.doh/doh.php
 2. Firefox ‚Μέ’θ•ΟX
-3. ttps://test.www/hello.html ‚Μ‰{——<br />‚±‚±‚Ε 1. ‚Ι‚ζ‚ι test.www ‚Μ–Ό‘O‰π + **Set-Cookie !!**
+3. ttps://test.www/hello.html ‚Μ‰{——<br />‚±‚±‚Ε 1. ‚Ι‚ζ‚ι test.www ‚Μ–Ό‘O‰π + Set-Cookie !!
 4. ttps://test.doh/request-headers.php ‚Μ‰{——<br />‚±‚±‚Ε 3. ‚Ι‚ζ‚ι Set-Cookie ‚Μ‹‰Κ‚πm”F
 
 ### 1. ©‘O DoH ‚Μ€”υ
 
-΅‰ρ‚Ν 127.0.0.1 ‚Μ DocumentRoot γ‚Ι DoH ‰“‚π¶¬‚·‚ιƒeƒXƒg—p‚Μ©‘O DoH ƒT[ƒrƒX‚π—pΣ‚µ‚ά‚µ‚½BƒTƒ“ƒvƒ‹ƒR[ƒh‚Ν [‚±‚Ώ‚η](doh.php) ‚Ε‚·B<br />
+΅‰ρ‚Ν 127.0.0.1 ‚Μ DocumentRoot γ‚Ι DoH ‰“‚π¶¬‚·‚ιƒeƒXƒg—p‚Μ©‘O DoH ƒT[ƒrƒX‚π—pΣ‚µ‚ά‚µ‚½B<br />
+[ƒTƒ“ƒvƒ‹ƒR[ƒh‚Ν‚±‚Ώ‚η](doh.php) ‚Ε‚·B<br />
 
 ### 2. Firefox ‚Μέ’θ•ΟX
 
@@ -137,8 +139,8 @@ Set-Cookie: doh=49; expires=Saturday, 11-Jan-2020 06:43:14 CET; Secure; HttpOnly
 
 ### 4. ttps://test.doh/request-headers.php ‚Μ‰{——
 
-‚Ά‚ζ‚Ά‚ζ©‘O DoH ƒT[ƒrƒX‚ΜƒhƒƒCƒ“itest.dohj‚π‰{——‚µ‚Δ‚έ‚ά‚·B<br />
-‚±‚Μ request-headers.php ‚ΝΘ‰Ί‚Μ‚ζ‚¤‚ΘΘ’P‚ΘƒXƒNƒƒvƒg‚Ε‚·B<br />
+‚Ά‚ζ‚Ά‚ζ©‘O DoH ƒT[ƒrƒX‚ΜƒhƒƒCƒ“itest.dohj‚ΜƒRƒ“ƒeƒ“ƒc‚π‰{——‚µ‚Δ‚έ‚ά‚·B<br />
+‚Ώ‚Θ‚έ‚Ι request-headers.php ‚ΝΘ‰Ί‚Μ‚ζ‚¤‚ΘΘ’P‚ΘƒXƒNƒƒvƒg‚Ε‚·B<br />
 
 ```php
 header('Content-Type: text/plain');
@@ -148,11 +150,23 @@ foreach ($headers as $field => $value) {
 }
 ```
 
-‚ΰ‚µζ’φ‚Μ©‘O DoH ƒT[ƒrƒX‚©‚η‚Μ Set-Cookie ‚ª—Lψ‚Θ‚η‚ΞAƒXƒNƒƒvƒg‚Μ apache_request_headers() ‚Ι‚Ν Firefox ‚©‚η‘—M‚³‚κ‚½ Cookie ƒwƒbƒ_‚ªά‚ά‚κ‚Δ‚Ά‚ι‚Ν‚Έ‚Ε‚ªA‹‰Κ‚Ν ...<br />
+‚ΰ‚µζ’φ‚Μ©‘O DoH ƒT[ƒrƒX‚©‚η‚Μ
+
+```http
+Set-Cookie: doh=49; expires=Saturday, 11-Jan-2020 06:43:14 CET; Secure; HttpOnly
+```
+
+‚ª—Lψ‚Θ‚η‚Ξ Firefox ‚Ν ttps://test.doh/request-headers.php ‰{——‚ΜΫ‚Ι
+
+```http
+Cookie: doh=49
+```
+
+‚π‘—M‚·‚ι‚Ν‚Έ‚Ε‚·‚ªA‰Κ‚½‚µ‚Δ‹‰Κ‚Ν ...<br />
 
 ![](06.png)
 
-‚Η‚¤‚β‚η DoH ‚Ι‚ζ‚Α‚Δ Set-Cookie ‚³‚κ‚½’lidoh=49j‚Ν‘—M‚³‚κ‚Δ‚Ά‚Θ‚©‚Α‚½‚ζ‚¤‚Ε‚·B<br />
+‚Η‚¤‚β‚η Firefox ‚Ν Cookie ‚π‘—M‚µ‚Θ‚©‚Α‚½‚ζ‚¤‚Ε‚·B<br />
 •Ϋ‘¶‚³‚κ‚½ Cookie ‚ΰ‚ ‚θ‚ά‚Ή‚ρ‚Ε‚µ‚½B<br />
 
 ![](07.png)
