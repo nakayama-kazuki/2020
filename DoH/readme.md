@@ -64,12 +64,12 @@ cf-ray: 3ffe69838a418c4c-SFO-DOG
 3. 適当なドメインのコンテンツを閲覧<br />→ ttps://test.www/hello.html<br />ここで 1. による test.www の名前解決 + Set-Cookie !!
 4. 自前 DoH サービスと同じドメインのコンテンツを閲覧<br />→ ttps://test.doh/request-headers.php<br />ここで 3. による Set-Cookie の結果を確認
 
-### 1. 自前 DoH サービスの準備
+#### 1. 自前 DoH サービスの準備
 
 自前 DoH サービスの [サンプルコードはこちら](doh.php) です。<br />
 今回のテストではこれを 127.0.0.1 の DocumentRoot 上で動かします。<br />
 
-### 2. Firefox の設定変更
+#### 2. Firefox の設定変更
 
 1. あらかじめ ttps://test.doh/ に対する証明書チェックのセキュリティー例外を承認する
 2. Cookie のブロック機能をオフにする
@@ -85,7 +85,7 @@ cf-ray: 3ffe69838a418c4c-SFO-DOG
 | bootstrapAddress      | （なし）          | 127.0.0.1                 | test.doh を 127.0.0.1 に解決  |
 | confirmationNS        | example.com       | skip                      | 起動時の動作チェックを割愛    |
 
-### 3. 適当なドメインのコンテンツを閲覧
+#### 3. 適当なドメインのコンテンツを閲覧
 
 次に適当なドメインのコンテンツ（ttps://test.www/hello.html）を閲覧します。<br />
 このとき test.www の名前解決のために DoH 要求が自前 DoH サービスに送信されます。<br />
@@ -130,11 +130,11 @@ Set-Cookie: doh=49; expires=Saturday, 11-Jan-2020 06:43:14 CET; Secure; HttpOnly
 00,01
 ```
 
-結果 test.www は [127.0.0.1 に解決](https://github.com/nakayama-kazuki/2020/blob/master/DoH/doh.php#L420) され 127.0.0.1 の DocumentRoot 上の hello.html が表示されました。<br />
+結果 test.www は [127.0.0.1 に解決](https://github.com/nakayama-kazuki/2020/blob/master/DoH/doh.php#L420) され DocumentRoot 上の hello.html が表示されました。<br />
 
 ![](05.png)
 
-### 4. 自前 DoH サービスと同じドメインのコンテンツを閲覧
+#### 4. 自前 DoH サービスと同じドメインのコンテンツを閲覧
 
 最後に自前 DoH サービスと同じドメインのコンテンツ（ttps://test.doh/request-headers.php）を閲覧します。<br />
 ちなみに request-headers.php は以下のような簡単なスクリプトです。<br />
@@ -175,6 +175,8 @@ Cookie: doh=49
 Firefox 71.0 の実装では DoH 応答の Set-Cookie は無視され、また DoH 要求でも Cookie は送信されないため、邪悪な DoH サービス提供者であっても、興味関心情報の蓄積～活用は難しいということが確認できました。<br />
 故に DoH を利用した名前解決は従来の方法よりもプライバシーセーフである、と結論付けます。<br />
 皆さんも他のブラウザを用いて実験してみてください。<br />
+
+![](08.png)
 
 余談ですが Web アプリケーションの開発～テストの際にはしばしば hosts を変更しますが、たまに設定ミスや元に戻すのを忘れてハマる人を見かけます。同じ環境で開発～テストをしているグループ向けの設定を DoH サービスで提供し、テスト実施者は User-Agent の DoH を on/off することで利用する環境を切り替える、もしくはテスト専用のブラウザでのみ DoH を使う ... なんて運用により（前述のミスも減って）生産性を高められそうですね。<br />
 
