@@ -71,25 +71,25 @@ cf-ray: 3ffe69838a418c4c-SFO-DOG
 
 ### 2. Firefox の設定変更
 
-1. 予め ttps://test.doh/ に対するセキュリティー例外を承認する
-2. Cookie のブロック機能は使わないのでチェックを外す
+1. あらかじめ ttps://test.doh/ に対する証明書チェックのセキュリティー例外を承認する
+2. Cookie のブロック機能をオフにする
 
 ![](04.png)
 
-3. about:config にて設定を変更して DoH を有効にする<br />
+3. DoH を有効にする（about:config）<br />
 
-| network.trr の設定    | 変更前の値                                    | 変更後の値                | 変更後の意味                  |
-| ---                   | ---                                           | ---                       | ---                           |
-| mode                  | 0                                             | 3                         | 名前解決に DoH のみ利用       |
-| uri                   | ttps://mozilla.cloudflare-dns.com/dns-query   | ttps://test.doh/doh.php   | DoH エントリー                |
-| bootstrapAddress      | （なし）                                      | 127.0.0.1                 | test.doh を 127.0.0.1 に解決  |
-| confirmationNS        | example.com                                   | skip                      | 起動時の動作チェックを割愛    |
+| network.trr の設定    | 変更前の値        | 変更後の値                | 変更後の意味                  |
+| ---                   | ---               | ---                       | ---                           |
+| mode                  | 0                 | 3                         | 名前解決に DoH のみ利用       |
+| uri                   | （cloudflare）    | ttps://test.doh/doh.php   | DoH エントリー                |
+| bootstrapAddress      | （なし）          | 127.0.0.1                 | test.doh を 127.0.0.1 に解決  |
+| confirmationNS        | example.com       | skip                      | 起動時の動作チェックを割愛    |
 
 ### 3. 適当なドメインのコンテンツを閲覧
 
 次に適当なドメインのコンテンツ（ttps://test.www/hello.html）を閲覧します。<br />
 このとき test.www の名前解決のために DoH 要求が自前 DoH サービスに送信されます。<br />
-※ エンティティーボディー部分は、実際は [RFC 1035](https://tools.ietf.org/html/rfc1035) で定義されるパケットフォーマットです<br />
+※ 実際のエンティティーボディー部分は [RFC 1035](https://tools.ietf.org/html/rfc1035) で定義されるパケットフォーマットです<br />
 
 ```http
 Host: test.doh
@@ -130,7 +130,7 @@ Set-Cookie: doh=49; expires=Saturday, 11-Jan-2020 06:43:14 CET; Secure; HttpOnly
 00,01
 ```
 
-今回は test.www を [127.0.0.1 に解決](https://github.com/nakayama-kazuki/2020/blob/master/DoH/doh.php#L420) して 127.0.0.1 の DocumentRoot 上の hello.html が表示されました。<br />
+結果 test.www は [127.0.0.1 に解決](https://github.com/nakayama-kazuki/2020/blob/master/DoH/doh.php#L420) され 127.0.0.1 の DocumentRoot 上の hello.html が表示されました。<br />
 
 ![](05.png)
 
@@ -173,9 +173,9 @@ Cookie: doh=49
 ## まとめ
 
 Firefox 71.0 の実装では DoH 応答の Set-Cookie は無視され、また DoH 要求でも Cookie は送信されないため、邪悪な DoH サービス提供者であっても、興味関心情報の蓄積～活用は難しいということが確認できました。<br />
-故に DoH を利用した名前解決は従来の方法よりもプライバシーセーフである、と結論付けることができました。<br />
+故に DoH を利用した名前解決は従来の方法よりもプライバシーセーフである、と結論付けます。<br />
 皆さんも他のブラウザを用いて実験してみてください。<br />
 
 余談ですが Web アプリケーションの開発～テストの際にはしばしば hosts を変更しますが、たまに設定ミスや元に戻すのを忘れてハマる人を見かけます。同じ環境で開発～テストをしているグループ向けの設定を DoH サービスで提供し、テスト実施者は User-Agent の DoH を on/off することで利用する環境を切り替える、もしくはテスト専用のブラウザでのみ DoH を使う ... なんて運用により（前述のミスも減って）生産性を高められそうですね。<br />
 
-さらに余談ですが Cookie をおかわりしたい方は [techscore blog](https://www.techscore.com/blog/author/nakayama-kazuki/) もどうぞ :-p
+さらに余談ですが Cookie をもっと食べたい方は [techscore blog](https://www.techscore.com/blog/author/nakayama-kazuki/) もどうぞ :-p
