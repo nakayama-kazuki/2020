@@ -62,12 +62,13 @@ for (let i = 0; i < appendlist.length; i++) {
 <br />
 <a href='{$C_URL_SETTING}'>back</a>
 <script nonce='{$C_NONCE}'>
+let wait_report_uri_ms = 500;
 window.setTimeout(function() {
 	fetch('{$C_LOGFILE}')
 		.then(res => res.ok ? res.text() : Promise.reject(new Error('404')))
 		.then(txt => document.getElementsByClassName('disp').item(0).value = txt)
 		.catch(err => console.log(err));
-}, 500);
+}, wait_report_uri_ms);
 </script>
 EOTEST;
 	break;
@@ -115,6 +116,7 @@ https://yahoo.jp/
 <div>resource (javascript) :</div>
 <textarea name='{$C_FNAME2}'>
 https://b92.yahoo.co.jp/js/s_retargeting.js
+https://s.yimg.jp/images/advertising/common/js/iicon.min.js
 </textarea>
 <br />
 <br />
