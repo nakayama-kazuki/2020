@@ -1,0 +1,56 @@
+<style type='text/css'>
+TEXTAREA {
+	width: 90%;
+	height: 15em;
+	border: solid 1px silver;
+	margin: 1em;
+}
+</style>
+
+<div><textarea readonly id='r1'></textarea></div>
+<div><textarea readonly id='r2'></textarea></div>
+
+<script>
+
+var GLOBAL_OBJ = {
+	owner : -1,
+	value : -1
+};
+
+function some_async_io(in_request_no)
+{
+	return new Promise(function(success, failure) {
+		setTimeout(function() {
+			(success)(in_request_no);
+		}, 0);
+	});
+}
+
+async function handle_request(in_request_no, in_test_mode)
+{
+	if (in_test_mode) {
+		GLOBAL_OBJ.value = await some_async_io(in_request_no);
+		GLOBAL_OBJ.owner = in_request_no;
+		var result = document.getElementById('r1');
+	} else {
+		GLOBAL_OBJ.owner = in_request_no;
+		GLOBAL_OBJ.value = await some_async_io(in_request_no);
+		var result = document.getElementById('r2');
+	}
+	result.value += 'id=' + GLOBAL_OBJ.owner + ' : value=' + GLOBAL_OBJ.value + "\n";
+}
+
+function create_pseudo_requests(in_num, in_requests_task, in_test_mode)
+{
+	for (let i = 0; i < in_num; i++) {
+		window.setTimeout(function() {
+			(in_requests_task)(i, in_test_mode);
+		}, Math.random() * 10);
+	}
+}
+
+const HOW_MANY_REQUESTS = 10;
+create_pseudo_requests(HOW_MANY_REQUESTS, handle_request, true);
+create_pseudo_requests(HOW_MANY_REQUESTS, handle_request, false);
+
+</script>
