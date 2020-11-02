@@ -8,12 +8,14 @@ function magic($in_no, $in_digit = 5)
 $C_TEST = magic(0);
 $C_REPORT = magic(1);
 $C_NONCE = magic(2);
-$C_FNAME1 = magic(3);
-$C_FNAME2 = magic(4);
-$C_LOGFILE = substr($_SERVER['SCRIPT_NAME'], strrpos($_SERVER['SCRIPT_NAME'], '/') + 1) . '.log';
-$C_URL_SETTING = $_SERVER['SCRIPT_NAME'];
-$C_URL_TEST = "{$_SERVER['SCRIPT_NAME']}?{$C_TEST}";
-$C_URL_REPORT = "{$_SERVER['SCRIPT_NAME']}?{$C_REPORT}";
+$C_FIELD1 = magic(3);
+$C_FIELD2 = magic(4);
+$C_SCRIPT = $_SERVER['SCRIPT_NAME'];
+$C_LOGFILE = (pathinfo($C_SCRIPT))['filename'] . '.log';
+$C_URL_INIT = $C_SCRIPT;
+$C_URL_TEST = "{$C_SCRIPT}?{$C_TEST}";
+$C_URL_REPORT = "{$C_SCRIPT}?{$C_REPORT}";
+$C_URL_LOGFILE = (pathinfo($C_SCRIPT))['dirname'] . "/{$C_LOGFILE}";
 
 function textarea_explode($in_post)
 {
@@ -37,9 +39,9 @@ switch ($_SERVER['QUERY_STRING']) {
 */
 
 case $C_TEST :
-	$src = implode(' ', textarea_explode($_POST[$C_FNAME1]));
+	$src = implode(' ', textarea_explode($_POST[$C_FIELD1]));
 	header("Content-Security-Policy-Report-Only: script-src 'nonce-{$C_NONCE}' {$src}; report-uri {$C_URL_REPORT}");
-	$array = '["' . implode('", "', textarea_explode($_POST[$C_FNAME2])) . '"]';
+	$js_literal_array = '["' . implode('", "', textarea_explode($_POST[$C_FIELD2])) . '"]';
 	print <<<EOTEST
 <style type='text/css'>
 .disp {
@@ -50,7 +52,7 @@ case $C_TEST :
 </style>
 <script nonce='{$C_NONCE}'>
 let dst = document.getElementsByTagName('SCRIPT').item(0);
-let appendlist = {$array};
+let appendlist = {$js_literal_array};
 for (let i = 0; i < appendlist.length; i++) {
 	let s = document.createElement('SCRIPT');
 	s.src = appendlist[i];
@@ -60,11 +62,11 @@ for (let i = 0; i < appendlist.length; i++) {
 <div>report :</div>
 <textarea readonly class='disp'></textarea>
 <br />
-<a href='{$C_URL_SETTING}'>back</a>
+<a href='{$C_URL_INIT}'>back</a>
 <script nonce='{$C_NONCE}'>
 let wait_report_uri_ms = 500;
 window.setTimeout(function() {
-	fetch('{$C_LOGFILE}')
+	fetch('{$C_URL_LOGFILE}')
 		.then(res => res.ok ? res.text() : Promise.reject(new Error('404')))
 		.then(txt => document.getElementsByClassName('disp').item(0).value = txt)
 		.catch(err => console.log(err));
@@ -88,9 +90,9 @@ case $C_REPORT :
 	break;
 
 /*
-	------------
-	Test Setting
-	------------
+	-------------------
+	Init (Test Setting)
+	-------------------
 */
 
 default :
@@ -101,22 +103,22 @@ default :
 <style type='text/css'>
 TEXTAREA {
 	border: solid 1px gray;
-	width: 50%;
-	height: 90px;
+	width: 90%;
+	height: 100px;
 }
 </style>
 <form action='{$C_URL_TEST}' method='post' enctype='application/x-www-form-urlencoded'>
 <div>script-src :</div>
-<textarea name='{$C_FNAME1}'>
-https://yimg.jp/
-https://yahoo.jp/
+<textarea name='{$C_FIELD1}'>
+https://tpc.googlesyndication.com/
+https://pagead2.googlesyndication.com/
 </textarea>
 <br />
 <br />
 <div>resource (javascript) :</div>
-<textarea name='{$C_FNAME2}'>
-https://b92.yahoo.co.jp/js/s_retargeting.js
-https://s.yimg.jp/images/advertising/common/js/iicon.min.js
+<textarea name='{$C_FIELD2}'>
+https://tpc.googlesyndication.com/sodar/sodar2.js
+https://pagead2.googlesyndication.com/bg/36t2pzUCsky2p8StOfRDuZ2SQrRQGkwFUvrIpVyovYo.js
 </textarea>
 <br />
 <br />
