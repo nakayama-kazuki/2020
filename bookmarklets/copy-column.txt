@@ -54,7 +54,7 @@ for (var i = 0; i < tbls.length; i++) {
 }
 
 d.addEventListener('keydown', function(e) {
-	if ((e.ctrlKey) && (e.key == 'c')) {
+	if ((e.ctrlKey || e.metaKey) && (e.key == 'c')) {
 		var dummy = d.createElement('TEXTAREA');
 		for (var i = 0; i < tbls.length; i++) {
 			dummy.textContent += tbls.item(i)._selectData();
