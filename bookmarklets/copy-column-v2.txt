@@ -1,0 +1,130 @@
+(function(d) {
+
+async function copyToClipboard(text)
+{
+	await navigator.clipboard.writeText(text);
+}
+
+function remove_from_sss(in_remove, in_sss)
+{
+	let sp = ' ';
+	let buff = [];
+	in_sss.split(sp).forEach(e => {
+		if (e.trim() && (e != in_remove)) {
+			buff.push(e);
+		}
+	});
+	return buff.join(sp);
+}
+
+class VSelect {
+	constructor() {
+		this._cls = 'disableHighlight';
+		this._td = null;
+		this._handleCopy = this._copy.bind(this);
+		let cssList = d.styleSheets;
+		if (cssList.length > 0) {
+			cssList[0].insertRule('TD.' + this._cls + '::selection {background-color: transparent;}');
+		}
+	}
+	_eachCell(in_callback) {
+		let tds = this._td.closest('TABLE').getElementsByTagName('TD');
+		for (let i = 0; i < tds.length; i++) {
+			in_callback(tds.item(i));
+		}
+	}
+	_copy() {
+		let ra = window.getSelection().getRangeAt(0);
+		let n1 = ra.startContainer;
+		let n2 = ra.endContainer;
+		let r1 = n1.parentNode.closest('TR').rowIndex + 1;
+		let r2 = n2.parentNode.closest('TR').rowIndex - 1;
+		let buff = [];
+		buff.push(n1.data.substring(ra.startOffset));
+		this._eachCell(td => {
+			if (td.cellIndex === this._td.cellIndex) {
+				let row = td.parentNode.rowIndex;
+				if ((r1 <= row) && (row <= r2)) {
+					buff.push(td.innerText)
+				}
+			}
+		});
+		buff.push(n2.data.substring(0, ra.endOffset));
+		copyToClipboard(buff.join("\n"));
+	}
+	startVertical(in_td) {
+		this._td = in_td;
+		d.addEventListener('copy', this._handleCopy);
+		this._eachCell(td => {
+			if (td.cellIndex != this._td.cellIndex) {
+				td.className += ' ' + this._cls;
+			}
+		});
+	}
+	clearVertical() {
+		if (!this._td) {
+			return;
+		}
+		this._eachCell(td => {
+			td.className = remove_from_sss(this._cls, td.className);
+		});
+		d.removeEventListener('copy', this._handleCopy);
+		this._td = null;
+	}
+	stillVertical(in_td) {
+		if (!this._td) {
+			return false;
+		}
+		if (in_td.isEqualNode(this._td)) {
+			return true;
+		} else {
+			if (in_td.cellIndex === this._td.cellIndex) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+}
+
+let gVS = new VSelect();
+
+function isElement(in_nodeName)
+{
+	return function(node) {
+		if (node.nodeType === Node.ELEMENT_NODE) {
+			if (node.nodeName.toUpperCase() === in_nodeName) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+d.addEventListener('selectstart', ev => {
+	gVS.clearVertical();
+	let td = ev.composedPath().find(isElement('TD'));
+	if (td) {
+		gVS.startVertical(td);
+	}
+});
+
+d.addEventListener('mousemove', ev => {
+	if (ev.buttons != 1) {
+		return;
+	}
+	let td = ev.composedPath().find(isElement('TD'));
+	if (td) {
+		if (gVS.stillVertical(td)) {
+			// do nothing
+		} else {
+			gVS.clearVertical();
+		}
+	} else {
+		if (!(isElement('TABLE'))(ev.target)) {
+			gVS.clearVertical();
+		}
+	}
+});
+
+})(document);
