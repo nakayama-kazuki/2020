@@ -62,13 +62,13 @@ HTMLTableElement.prototype.startCustomSelect = function() {
 };
 
 HTMLTableElement.prototype.getSelectedData = function() {
+	let buff = [];
 	if (!this._exData || !this._exData.started) {
-		return;
+		return buff;
 	}
 	let range = window.getSelection().getRangeAt(0);
 	let start = range.startContainer.parentElement.closest('TD');
 	let end = range.endContainer.parentElement.closest('TD');
-	let buff = [];
 	let inRange = false;
 	Array.prototype.slice.call(this.getElementsByTagName('TD')).forEach(td => {
 		if (inRange) {
