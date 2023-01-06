@@ -1,99 +1,26 @@
 (function(d) {
 
+const DATTR = {
+	N : 'selection',
+	V : 'disabled'
+}
+
+if (d.styleSheets.length > 0) {
+	let selector = 'TD[data-' + DATTR.N + '="' + DATTR.V + '"]::selection ';
+	let style = '{background-color: transparent;}';
+	d.styleSheets[0].insertRule(selector + style);
+}
+
 async function copyToClipboard(text)
 {
 	await navigator.clipboard.writeText(text);
 }
 
-function remove_from_sss(in_remove, in_sss)
+function funcNodeIsElem(in_nodeName)
 {
-	let sp = ' ';
-	let buff = [];
-	in_sss.split(sp).forEach(e => {
-		if (e.trim() && (e != in_remove)) {
-			buff.push(e);
-		}
-	});
-	return buff.join(sp);
-}
-
-class VSelect {
-	constructor() {
-		this._cls = 'disableHighlight';
-		this._td = null;
-		this._handleCopy = this._copy.bind(this);
-		let cssList = d.styleSheets;
-		if (cssList.length > 0) {
-			cssList[0].insertRule('TD.' + this._cls + '::selection {background-color: transparent;}');
-		}
-	}
-	_eachCell(in_callback) {
-		let tds = this._td.closest('TABLE').getElementsByTagName('TD');
-		for (let i = 0; i < tds.length; i++) {
-			in_callback(tds.item(i));
-		}
-	}
-	_copy() {
-		let ra = window.getSelection().getRangeAt(0);
-		let n1 = ra.startContainer;
-		let n2 = ra.endContainer;
-		let r1 = n1.parentNode.closest('TR').rowIndex + 1;
-		let r2 = n2.parentNode.closest('TR').rowIndex - 1;
-		let buff = [];
-		buff.push(n1.data.substring(ra.startOffset));
-		this._eachCell(td => {
-			if (td.cellIndex === this._td.cellIndex) {
-				let row = td.parentNode.rowIndex;
-				if ((r1 <= row) && (row <= r2)) {
-					buff.push(td.innerText)
-				}
-			}
-		});
-		buff.push(n2.data.substring(0, ra.endOffset));
-		copyToClipboard(buff.join("\n"));
-	}
-	startVertical(in_td) {
-		this._td = in_td;
-		d.addEventListener('copy', this._handleCopy);
-		this._eachCell(td => {
-			if (td.cellIndex != this._td.cellIndex) {
-				td.className += ' ' + this._cls;
-			}
-		});
-	}
-	clearVertical() {
-		if (!this._td) {
-			return;
-		}
-		this._eachCell(td => {
-			td.className = remove_from_sss(this._cls, td.className);
-		});
-		d.removeEventListener('copy', this._handleCopy);
-		this._td = null;
-	}
-	stillVertical(in_td) {
-		if (!this._td) {
-			return false;
-		}
-		if (in_td.isEqualNode(this._td)) {
-			return true;
-		} else {
-			if (in_td.cellIndex === this._td.cellIndex) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-	}
-}
-
-let gVS = new VSelect();
-
-function isElement(in_nodeName)
-{
-	return function(node) {
-		if (node.nodeType === Node.ELEMENT_NODE) {
-			if (node.nodeName.toUpperCase() === in_nodeName) {
+	return function(in_node) {
+		if (in_node.nodeType === Node.ELEMENT_NODE) {
+			if (in_node.nodeName.toUpperCase() === in_nodeName) {
 				return true;
 			}
 		}
@@ -101,30 +28,82 @@ function isElement(in_nodeName)
 	}
 }
 
+HTMLTableElement.prototype.startCustomSelect = function() {
+	if (!this._exData) {
+		this._exData = {};
+		this._exData.handleMouseMove = (function(ev) {
+			if ((funcNodeIsElem('TD'))(ev.target)) {
+				delete ev.target.dataset[DATTR.N];
+				console.log('added target');
+			}
+		}).bind(this);
+		this._exData.handleMouseLeave = (function(ev) {
+			Array.prototype.slice.call(this.getElementsByTagName('TD')).forEach(td => {
+				delete td.dataset[DATTR.N];
+			});
+			this.removeEventListener('mousemove', this._exData.handleMouseMove);
+			this.removeEventListener('mouseleave', this._exData.handleMouseLeave);
+			this._exData.started = false;
+			console.log('stopped');
+		}).bind(this);
+		this._exData.started = false;
+	}
+	if (!this._exData.started) {
+		this.addEventListener('mousemove', this._exData.handleMouseMove);
+		this.addEventListener('mouseleave', this._exData.handleMouseLeave);
+	}
+	/* all clear when restart */
+	Array.prototype.slice.call(this.getElementsByTagName('TD')).forEach(td => {
+		td.dataset[DATTR.N] = DATTR.V;
+	});
+	this._exData.started = true;
+	console.log('started');
+}
+
+HTMLTableElement.prototype.getSelectedData = function() {
+	if (!this._exData || !this._exData.started) {
+		return;
+	}
+	let range = window.getSelection().getRangeAt(0);
+	let start = range.startContainer.parentElement.closest('TD');
+	let end = range.endContainer.parentElement.closest('TD');
+	let buff = [];
+	let inRange = false;
+	Array.prototype.slice.call(this.getElementsByTagName('TD')).forEach(td => {
+		if (inRange) {
+			if (td.isEqualNode(end)) {
+				buff.push(end.innerText.substring(0, range.endOffset));
+				inRange = false;
+			} else {
+				if (td.dataset[DATTR.N] !== DATTR.V) {
+					buff.push(td.innerText);
+				}
+			}
+		} else {
+			if (td.isEqualNode(start)) {
+				buff.push(start.innerText.substring(range.startOffset));
+				inRange = true;
+			}
+		}
+	});
+	return buff;
+}
+
 d.addEventListener('selectstart', ev => {
-	gVS.clearVertical();
-	let td = ev.composedPath().find(isElement('TD'));
+	let td = ev.composedPath().find(funcNodeIsElem('TD'));
 	if (td) {
-		gVS.startVertical(td);
+		td.closest('TABLE').startCustomSelect();
 	}
 });
 
-d.addEventListener('mousemove', ev => {
-	if (ev.buttons != 1) {
-		return;
-	}
-	let td = ev.composedPath().find(isElement('TD'));
-	if (td) {
-		if (gVS.stillVertical(td)) {
-			// do nothing
-		} else {
-			gVS.clearVertical();
+d.addEventListener('copy', ev => {
+	Array.prototype.slice.call(d.getElementsByTagName('TABLE')).forEach(tbl => {
+		let buff = tbl.getSelectedData();
+		if (buff.length > 0) {
+			/* once ? */
+			copyToClipboard(buff.join("\n"));
 		}
-	} else {
-		if (!(isElement('TABLE'))(ev.target)) {
-			gVS.clearVertical();
-		}
-	}
+	});
 });
 
 })(document);
