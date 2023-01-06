@@ -6,7 +6,8 @@ const DATTR = {
 };
 
 if (d.styleSheets.length > 0) {
-	let selector = 'TD[data-' + DATTR.N + '="' + DATTR.V + '"]::selection ';
+	let selector = 'TD[data-' + DATTR.N + '="' + DATTR.V + '"]';
+	selector = selector + '::selection, ' + selector + ' *::selection ';
 	let style = '{background-color: transparent;}';
 	d.styleSheets[0].insertRule(selector + style);
 }
@@ -34,7 +35,7 @@ HTMLTableElement.prototype.startCustomSelect = function() {
 		this._exData.handleMouseMove = (function(ev) {
 			if ((funcNodeIsElem('TD'))(ev.target)) {
 				delete ev.target.dataset[DATTR.N];
-				console.log('added target');
+				/* console.log('added target'); */
 			}
 		}).bind(this);
 		this._exData.handleMouseLeave = (function(ev) {
@@ -44,7 +45,7 @@ HTMLTableElement.prototype.startCustomSelect = function() {
 			this.removeEventListener('mousemove', this._exData.handleMouseMove);
 			this.removeEventListener('mouseleave', this._exData.handleMouseLeave);
 			this._exData.started = false;
-			console.log('stopped');
+			/* console.log('stopped'); */
 		}).bind(this);
 		this._exData.started = false;
 	}
@@ -57,7 +58,7 @@ HTMLTableElement.prototype.startCustomSelect = function() {
 		td.dataset[DATTR.N] = DATTR.V;
 	});
 	this._exData.started = true;
-	console.log('started');
+	/* console.log('started'); */
 };
 
 HTMLTableElement.prototype.getSelectedData = function() {
