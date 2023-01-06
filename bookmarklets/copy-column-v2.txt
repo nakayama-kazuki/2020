@@ -6,10 +6,20 @@ const DATTR = {
 };
 
 if (d.styleSheets.length > 0) {
-	let selector = 'TD[data-' + DATTR.N + '="' + DATTR.V + '"]';
-	selector = selector + '::selection, ' + selector + ' *::selection ';
-	let style = '{background-color: transparent;}';
-	d.styleSheets[0].insertRule(selector + style);
+	let attrsel = '[data-' + DATTR.N + '="' + DATTR.V + '"]';
+	let style =
+		'TH' +
+		'::selection, ' +
+		'TH' + 
+		' *::selection, ' +
+		'TD' +
+		attrsel +
+		'::selection, ' +
+		'TD' +
+		attrsel +
+		' *::selection ' +
+		'{background-color: transparent;}';
+	d.styleSheets[0].insertRule(style);
 }
 
 async function copyToClipboard(text)
