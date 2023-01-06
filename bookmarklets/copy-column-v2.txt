@@ -113,6 +113,7 @@ d.addEventListener('copy', ev => {
 		if (buff.length > 0) {
 			/* once ? */
 			copyToClipboard(buff.join("\n"));
+			window.getSelection().getRangeAt(0).collapse();
 		}
 	});
 });
