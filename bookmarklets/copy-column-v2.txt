@@ -12,18 +12,14 @@ if (d.styleSheets.length === 0) {
 let sp = String.fromCharCode(32);
 let attrsel = '[data-' + DATTR.N + '="' + DATTR.V + '"]';
 let style =
-	'TH' +
-	attrsel +
-	'::selection, ' +
-	'TH' +
-	attrsel +
-	sp + '*::selection, ' +
-	'TD' +
-	attrsel +
-	'::selection, ' +
-	'TD' +
-	attrsel +
-	sp + '*::selection ' +
+	'TH' + attrsel +
+	'::selection,' +
+	'TH' + attrsel + sp + '*' +
+	'::selection,' +
+	'TD' + attrsel +
+	'::selection,' +
+	'TD' + attrsel + sp + '*' +
+	'::selection' +
 	'{background-color: transparent !important;}';
 d.styleSheets[0].insertRule(style);
 
@@ -47,6 +43,10 @@ function funcNodeIsElem(...in_nodeNames)
 }
 
 HTMLTableElement.prototype.startCustomSelect = function() {
+	if (this.getElementsByTagName('TABLE').length > 0) {
+		/* target is inner table */
+		return;
+	}
 	if (!this._exData) {
 		this._exData = {};
 		this._exData.debug = function(in_msg) {
@@ -68,7 +68,7 @@ HTMLTableElement.prototype.startCustomSelect = function() {
 		this._exData.handleMouseLeave = (function(ev) {
 			const right_button = 1;
 			if (ev.buttons != right_button) {
-				/* this is for ux */
+				/* for my favorite ux :-p */
 				w.getSelection().getRangeAt(0).collapse();
 			}
 			Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
@@ -101,21 +101,29 @@ HTMLTableElement.prototype.getSelectedData = function() {
 	let range = w.getSelection().getRangeAt(0);
 	let s_cell = range.startContainer.parentElement.closest('TH, TD');
 	let e_cell = range.endContainer.parentElement.closest('TH, TD');
-	let inRange = false;
+	let _index = function(in_cell) {
+		try {
+			return [in_cell.parentNode.rowIndex, in_cell.cellIndex];
+		} catch(err) {
+			return [-1, -1];
+		}
+	};
+	this._exData.debug('range : (' + _index(s_cell).join(',') + ') - (' + _index(e_cell).join(',') + ')');
+	let _in_range = false;
 	Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
-		if (inRange) {
-			if (cell.isEqualNode(e_cell)) {
+		if (_in_range) {
+			if (cell === e_cell) {
 				buff.push(e_cell.innerText.substring(0, range.endOffset));
-				inRange = false;
+				_in_range = false;
 			} else {
 				if (cell.dataset[DATTR.N] !== DATTR.V) {
 					buff.push(cell.innerText);
 				}
 			}
 		} else {
-			if (cell.isEqualNode(s_cell)) {
+			if (cell === s_cell) {
 				buff.push(s_cell.innerText.substring(range.startOffset));
-				inRange = true;
+				_in_range = true;
 			}
 		}
 	});
@@ -123,9 +131,9 @@ HTMLTableElement.prototype.getSelectedData = function() {
 };
 
 d.addEventListener('selectstart', ev => {
-	let cell = ev.composedPath().find(funcNodeIsElem('TH', 'TD'));
-	if (cell) {
-		cell.closest('TABLE').startCustomSelect();
+	let table = ev.composedPath().find(funcNodeIsElem('TABLE'));
+	if (table) {
+		table.startCustomSelect();
 	}
 });
 
