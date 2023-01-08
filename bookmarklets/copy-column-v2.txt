@@ -1,38 +1,45 @@
-(function(d) {
+(function(w, d) {
 
 const DATTR = {
 	N : 'selection',
 	V : 'disabled'
 };
 
-if (d.styleSheets.length > 0) {
-	let attrsel = '[data-' + DATTR.N + '="' + DATTR.V + '"]';
-	let style =
-		'TH' +
-		'::selection, ' +
-		'TH' + 
-		' *::selection, ' +
-		'TD' +
-		attrsel +
-		'::selection, ' +
-		'TD' +
-		attrsel +
-		' *::selection ' +
-		'{background-color: transparent;}';
-	d.styleSheets[0].insertRule(style);
+if (d.styleSheets.length === 0) {
+	document.getElementsByTagName('SCRIPT').item(0).parentNode.appendChild(document.createElement('STYLE'));
 }
+
+let sp = String.fromCharCode(32);
+let attrsel = '[data-' + DATTR.N + '="' + DATTR.V + '"]';
+let style =
+	'TH' +
+	attrsel +
+	'::selection, ' +
+	'TH' +
+	attrsel +
+	sp + '*::selection, ' +
+	'TD' +
+	attrsel +
+	'::selection, ' +
+	'TD' +
+	attrsel +
+	sp + '*::selection ' +
+	'{background-color: transparent !important;}';
+d.styleSheets[0].insertRule(style);
 
 async function copyToClipboard(text)
 {
 	await navigator.clipboard.writeText(text);
 }
 
-function funcNodeIsElem(in_nodeName)
+function funcNodeIsElem(...in_nodeNames)
 {
 	return function(in_node) {
 		if (in_node.nodeType === Node.ELEMENT_NODE) {
-			if (in_node.nodeName.toUpperCase() === in_nodeName) {
-				return true;
+			for (let nodeName of in_nodeNames) {
+				if (in_node.nodeName.toUpperCase() === nodeName) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -42,20 +49,35 @@ function funcNodeIsElem(in_nodeName)
 HTMLTableElement.prototype.startCustomSelect = function() {
 	if (!this._exData) {
 		this._exData = {};
+		this._exData.debug = function(in_msg) {
+			console.log(in_msg);
+		};
 		this._exData.handleMouseMove = (function(ev) {
-			if ((funcNodeIsElem('TD'))(ev.target)) {
+			const right_button = 1;
+			if (ev.buttons != right_button) {
+				return;
+			}
+			if (!(funcNodeIsElem('TH', 'TD'))(ev.target)) {
+				return;
+			}
+			if (ev.target.dataset[DATTR.N] === DATTR.V) {
+				this._exData.debug('added target');
 				delete ev.target.dataset[DATTR.N];
-				/* console.log('added target'); */
 			}
 		}).bind(this);
 		this._exData.handleMouseLeave = (function(ev) {
-			Array.prototype.slice.call(this.getElementsByTagName('TD')).forEach(td => {
-				delete td.dataset[DATTR.N];
+			const right_button = 1;
+			if (ev.buttons != right_button) {
+				/* this is for ux */
+				w.getSelection().getRangeAt(0).collapse();
+			}
+			Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
+				delete cell.dataset[DATTR.N];
 			});
 			this.removeEventListener('mousemove', this._exData.handleMouseMove);
 			this.removeEventListener('mouseleave', this._exData.handleMouseLeave);
+			this._exData.debug('stopped');
 			this._exData.started = false;
-			/* console.log('stopped'); */
 		}).bind(this);
 		this._exData.started = false;
 	}
@@ -64,11 +86,11 @@ HTMLTableElement.prototype.startCustomSelect = function() {
 		this.addEventListener('mouseleave', this._exData.handleMouseLeave);
 	}
 	/* all clear when restart */
-	Array.prototype.slice.call(this.getElementsByTagName('TD')).forEach(td => {
-		td.dataset[DATTR.N] = DATTR.V;
+	Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
+		cell.dataset[DATTR.N] = DATTR.V;
 	});
+	this._exData.debug('started');
 	this._exData.started = true;
-	/* console.log('started'); */
 };
 
 HTMLTableElement.prototype.getSelectedData = function() {
@@ -76,23 +98,23 @@ HTMLTableElement.prototype.getSelectedData = function() {
 	if (!this._exData || !this._exData.started) {
 		return buff;
 	}
-	let range = window.getSelection().getRangeAt(0);
-	let start = range.startContainer.parentElement.closest('TD');
-	let end = range.endContainer.parentElement.closest('TD');
+	let range = w.getSelection().getRangeAt(0);
+	let s_cell = range.startContainer.parentElement.closest('TH, TD');
+	let e_cell = range.endContainer.parentElement.closest('TH, TD');
 	let inRange = false;
-	Array.prototype.slice.call(this.getElementsByTagName('TD')).forEach(td => {
+	Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
 		if (inRange) {
-			if (td.isEqualNode(end)) {
-				buff.push(end.innerText.substring(0, range.endOffset));
+			if (cell.isEqualNode(e_cell)) {
+				buff.push(e_cell.innerText.substring(0, range.endOffset));
 				inRange = false;
 			} else {
-				if (td.dataset[DATTR.N] !== DATTR.V) {
-					buff.push(td.innerText);
+				if (cell.dataset[DATTR.N] !== DATTR.V) {
+					buff.push(cell.innerText);
 				}
 			}
 		} else {
-			if (td.isEqualNode(start)) {
-				buff.push(start.innerText.substring(range.startOffset));
+			if (cell.isEqualNode(s_cell)) {
+				buff.push(s_cell.innerText.substring(range.startOffset));
 				inRange = true;
 			}
 		}
@@ -101,21 +123,20 @@ HTMLTableElement.prototype.getSelectedData = function() {
 };
 
 d.addEventListener('selectstart', ev => {
-	let td = ev.composedPath().find(funcNodeIsElem('TD'));
-	if (td) {
-		td.closest('TABLE').startCustomSelect();
+	let cell = ev.composedPath().find(funcNodeIsElem('TH', 'TD'));
+	if (cell) {
+		cell.closest('TABLE').startCustomSelect();
 	}
 });
 
 d.addEventListener('copy', ev => {
+	let buff = [];
 	Array.prototype.slice.call(d.getElementsByTagName('TABLE')).forEach(tbl => {
-		let buff = tbl.getSelectedData();
-		if (buff.length > 0) {
-			/* once ? */
-			copyToClipboard(buff.join("\n"));
-			window.getSelection().getRangeAt(0).collapse();
-		}
+		buff = buff.concat(tbl.getSelectedData());
 	});
+	if (buff.length > 0) {
+		copyToClipboard(buff.join("\n"));
+	}
 });
 
-})(document);
+})(window, document);
