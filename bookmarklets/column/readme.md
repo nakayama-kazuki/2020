@@ -1,8 +1,8 @@
-# 列のテキスト選択 + コピーしたくなったことはありませんか？
+# 列のテキスト選択 + コピーしたいのだが
 
 こんにちは、エンジニアの中山です。
 
-ウェブベースのコラボレーションツールや SaaS で表（TABLE 要素）が使われることがよくありますが、列（縦方向）のテキスト選択 + コピーしたくなったことはありませんか？例えば Confluence に表を挿入して情報を整理したときなどで、そういったニーズが多いのではないかと思います。というわけで、今回は列方向のテキスト選択 + コピーにチャレンジしてみましょう。
+ウェブベースのコラボレーションツールや SaaS で表（TABLE 要素）が使われることがよくありますが、列（縦方向）のテキスト選択 + コピーしたくなったことはありませんか？例えば Confluence に表を挿入して情報を整理したときなどで、そうしたニーズは少なからずあるように思えます。というわけで、今回は列のテキスト選択 + コピーにチャレンジしてみます。
 
 ## ひらがな五十音表
 
@@ -10,21 +10,25 @@ TABLE 要素で作ったひらがな五十音表から
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-1.png' />
 
-味付けの「さしすせそ」（もしくは営業トークの「さしすせそ」）を選択 + コピーしてみます。
+営業トークの「さしすせそ」（もしくは味付けの「さしすせそ」）を選択 + コピーしてみます。
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-2.png' />
 
-みなさまご想像通りの結果です www 選択範囲は DOM の走査順序となりました。
+やはり www みなさまご想像通りの結果です。要素の走査順序で「さ」から「そ」までの選択範囲となりました。
 
 ## writing-mode
 
-ろころで CSS の [writing-mode](https://www.w3.org/TR/css-writing-modes-3/) を適用すると
+行のテキスト選択が可能なら …
+
+<img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-8.png' />
+
+CSS の [writing-mode](https://www.w3.org/TR/css-writing-modes-3/) を適用して
 
 ```
 TABLE { writing-mode : vertical-lr; }
 ```
 
-こんな感じに行と列を入れ替えることができます。
+行と列を入れ替えてみてはどうだろうか？
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-3.png' />
 
@@ -32,34 +36,48 @@ TABLE { writing-mode : vertical-lr; }
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-4.png' />
 
-できない www やはり選択範囲は DOM の走査順序となります。
+できない www 先ほどと同様、要素の走査順序で「さ」から「そ」までの選択範囲となりました。
 
 ## 世の皆さんはどうしている？
 
-列のテキスト選択 + コピー … のニーズは確実にあるはずですが、ネットで検索 / 周囲の意見をたずねてみたところ、概ね
+列のテキスト選択 + コピー … のニーズは確実にあるはずですが、ネットで検索したり周囲の意見をたずねてみたところ、みなさん
 
 - ブラウザにアドオンを導入する
 - エクセルにはりつける
 
-といった対応のようです。あとは力業の bookmarklet で実現できないこともないですが、選択時に DOM を操作して見た目を変えるのは … 微妙な印象が拭えませんね。またブラックボックス化されたアドオンだと安全性の観点で不安を感じます ^^;
+といった対応をされているようです。あとは力業の bookmarklet で実現できないこともないですが、選択時に新たなスタイルを適用する方式の場合、コラボレーションツールや SaaS が提供する UX への悪影響が気になります。加えてブラックボックス化されたアドオンだと安全性の観点で不安を感じます ^^;
 
 ## ::selection 疑似要素
 
-もう少々実現方法を探求してみましょう。疑似要素の ::selection を使って選択した列以外のセルのスタイルを非選択状態同様に変更してみるというのはどうでしょうか？
+もう少々実現方法を探求してみましょう。疑似要素の ::selection を使って選択した列以外に
+
+```
+TD::selection { background-color: transparent; }
+```
+
+を適用してみるのはどうでしょうか？
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-5.png' />
 
-おおっ！いい感じで選択できました。この状態から copy イベントでスタイルに応じたデータを取得することで「列のテキスト選択 + コピー」は実現できそうですね。こちらがその bookmarklet になります。
+おおっ！いい感じで選択できました。この状態から copy イベントのリスナで
+
+```
+let range = w.getSelection().getRangeAt(0);
+let s_cell = range.startContainer.parentElement.closest('TD');
+let e_cell = range.endContainer.parentElement.closest('TD');
+```
+
+の s_cell ～ e_cell の範囲でスタイルに応じたデータを取得することで「列のテキスト選択 + コピー」は実現できそうです。こちらがその bookmarklet になります。
 
 ```
 javascript:!function(e,t){const a="selection",n="disabled";0===t.styleSheets.length&&document.getElementsByTagName("SCRIPT").item(0).parentNode.appendChild(document.createElement("STYLE"));let s=String.fromCharCode(32),o="[data-"+a+'="'+n+'"]',r="TH"+o+"::selection,TH"+o+s+"*::selection,TD"+o+"::selection,TD"+o+s+"*::selection{background-color: transparent !important;}";function i(...e){return function(t){if(t.nodeType===Node.ELEMENT_NODE)for(let a of e)if(t.nodeName.toUpperCase()===a)return!0;return!1}}t.styleSheets[0].insertRule(r),HTMLTableElement.prototype.startCustomSelect=function(){this.getElementsByTagName("TABLE").length>0||(this._exData||(this._exData={},this._exData.debug=function(e){console.log(e)},this._exData.handleMouseMove=function(e){1==e.buttons&&i("TH","TD")(e.target)&&e.target.dataset[a]===n&&(this._exData.debug("added target"),delete e.target.dataset[a])}.bind(this),this._exData.handleMouseLeave=function(t){1!=t.buttons&&e.getSelection().getRangeAt(0).collapse(),Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{delete e.dataset[a]})),this.removeEventListener("mousemove",this._exData.handleMouseMove),this.removeEventListener("mouseleave",this._exData.handleMouseLeave),this._exData.debug("stopped"),this._exData.started=!1}.bind(this),this._exData.started=!1),this._exData.started||(this.addEventListener("mousemove",this._exData.handleMouseMove),this.addEventListener("mouseleave",this._exData.handleMouseLeave)),Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{e.dataset[a]=n})),this._exData.debug("started"),this._exData.started=!0)},HTMLTableElement.prototype.getSelectedData=function(){let t=[];if(!this._exData||!this._exData.started)return t;let s=e.getSelection().getRangeAt(0),o=s.startContainer.parentElement.closest("TH, TD"),r=s.endContainer.parentElement.closest("TH, TD"),i=function(e){try{return[e.parentNode.rowIndex,e.cellIndex]}catch(e){return[-1,-1]}};this._exData.debug("range : ("+i(o).join(",")+") - ("+i(r).join(",")+")");let l=!1;return Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{l?e===r?(t.push(r.innerText.substring(0,s.endOffset)),l=!1):e.dataset[a]!==n&&t.push(e.innerText):e===o&&(t.push(o.innerText.substring(s.startOffset)),l=!0)})),t},t.addEventListener("selectstart",(e=>{let t=e.composedPath().find(i("TABLE"));t&&t.startCustomSelect()})),t.addEventListener("copy",(e=>{let a=[];Array.prototype.slice.call(t.getElementsByTagName("TABLE")).forEach((e=>{a=a.concat(e.getSelectedData())})),a.length>0&&async function(e){await navigator.clipboard.writeText(e)}(a.join("\n"))}))}(window,document);void(0);
 ```
 
-ソースコードは [こちら](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt) ですので、必要に応じでカスタマイズしてご利用ください。ちなにみ「列のテキスト選択 + コピー」とはいいつつ、実際にはこんなことも可能です。
+ソースコードは [こちら](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt) にありますので、必要に応じでカスタマイズしてご活用ください。ちなにみ「列のテキスト選択 + コピー」とはいいつつ、実際にはこんなことも可能です。
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-6.png' />
 
-もう必要ありませんが writing-mode で vertical-lr を指定した場合はこんな結果になります。
+おまけで writing-mode で vertical-lr を指定した場合はこんな結果になります。
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-7.png' />
 
@@ -73,9 +91,9 @@ javascript:!function(e,t){const a="selection",n="disabled";0===t.styleSheets.len
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-5.png' />
 
-な結果を期待していると思います。
+のような結果を期待しているはずです。
 
-また、選択範囲は排他的ではなくブラウザアプリケーションの実装次第で行選択 / 列選択 / 任意範囲選択をそれぞれ実現することは可能だと思います（実際にサンプルの bookmarklet は概ねそのような挙動になっています）。さらに、これは差別化要因となりブラウザ選択のモチベーションにもつながるはずです。
+また、選択範囲は排他的ではなくブラウザアプリケーションの実装次第で行選択 / 列選択 / 任意範囲選択をそれぞれ実現することは可能だと思います（実際にサンプルの bookmarklet は概ねそのような挙動です）。さらに、これは差別化要因となりブラウザ選択のモチベーションにもつながるはずです。
 
-そんなわけでスルーされるとは思いつつブラウザベンダに提案してみます。続報（ないかもしれないけど）乞うご期待！
+そんなわけでスルーされるとは思いつつブラウザベンダにネイティブ実装の提案をしてみます。続報（ないかもしれないけど）乞うご期待！
 
