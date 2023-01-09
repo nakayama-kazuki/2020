@@ -63,11 +63,15 @@ TD::selection { background-color: transparent; }
 
 ```
 document.addEventListener('copy', ev => {
-    let range = w.getSelection().getRangeAt(0);
+
+    /* (omitted) */
+
+    let range = window.getSelection().getRangeAt(0);
     let start = range.startContainer;
     let end = range.endContainer;
 
     /* (omitted) */
+
 });
 
 ```
@@ -84,13 +88,13 @@ javascript:!function(e,t){const a="selection",n="disabled";0===t.styleSheets.len
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-6.png' />
 
-挫折した writing-mode 作戦の場合こんな結果になります。
+先ほど挫折した writing-mode の場合はこのようになります。
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-7.png' />
 
 ## ブラウザアプリケーションによるサポート
 
-あらためて思いましたが 99% のユーザーは TABLE 要素でテキスト選択 + コピーをする時には
+あらためて思うことですが 99% のユーザーは TABLE 要素でテキスト選択 + コピーをする時には
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-2.png' />
 
@@ -102,5 +106,5 @@ javascript:!function(e,t){const a="selection",n="disabled";0===t.styleSheets.len
 
 また、選択範囲は排他的ではなくブラウザアプリケーションの実装次第で行選択 / 列選択 / 任意範囲選択をそれぞれ実現することは可能だと思います（実際にサンプルの bookmarklet は概ねそのような挙動です）。さらに、これは差別化要因となりブラウザ選択のモチベーションにもつながるはずです。
 
-そんなわけでスルーされるとは思いつつブラウザベンダにネイティブ実装の提案をしてみます。続報（ないかもしれないけど）乞うご期待！
+ですので、スルーされるとは思いつつブラウザベンダにネイティブ実装の提案をしてみます。続報（ないかもしれないけど）乞うご期待！
 
