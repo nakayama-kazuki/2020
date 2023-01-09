@@ -14,7 +14,7 @@ TABLE 要素で作ったひらがな五十音表から
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-2.png' />
 
-みなさまご想像通りの結果です www 選択範囲は DOM の走査順序となります。
+みなさまご想像通りの結果です www 選択範囲は DOM の走査順序となりました。
 
 ## writing-mode
 
@@ -74,7 +74,8 @@ javascript:!function(e,t){const a="selection",n="disabled";0===t.styleSheets.len
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-5.png' />
 
 な結果を期待していると思います。
-また、これは排他的ではなくブラウザアプリケーションの実装次第で行選択 / 列選択 / 任意範囲選択をそれぞれ実行することは可能だと思います（実際にサンプルの bookmarklet は概ねそのような挙動になっています）。また、これは差別化要因となりブラウザ選択のモチベーションにもつながるはずです。
+
+また、選択範囲は排他的ではなくブラウザアプリケーションの実装次第で行選択 / 列選択 / 任意範囲選択をそれぞれ実現することは可能だと思います（実際にサンプルの bookmarklet は概ねそのような挙動になっています）。さらに、これは差別化要因となりブラウザ選択のモチベーションにもつながるはずです。
 
 そんなわけでスルーされるとは思いつつブラウザベンダに提案してみます。続報（ないかもしれないけど）乞うご期待！
 
