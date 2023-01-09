@@ -73,10 +73,9 @@ document.addEventListener('copy', ev => {
     /* (omitted) */
 
 });
-
 ```
 
-として start ～ end の範囲でスタイルに応じたデータを取得することで「列のテキスト選択 + コピー」は実現できそうです。
+として start ～ end の範囲でスタイルに応じたデータを取得することで「列のテキスト選択 + コピー」は実現できそうですね。
 
 … というわけで、こちらは上記方針で細部含めて実装した bookmarklet です。
 
@@ -88,7 +87,7 @@ javascript:!function(e,t){const a="selection",n="disabled";0===t.styleSheets.len
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-6.png' />
 
-先ほど挫折した writing-mode の場合はこのようになります。
+先ほど挫折した writing-mode での「さしすせそ」選択はこのようになります。
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-7.png' />
 
