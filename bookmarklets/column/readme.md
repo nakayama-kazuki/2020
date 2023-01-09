@@ -8,11 +8,11 @@
 
 TABLE 要素で作ったひらがな五十音表から
 
-<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-1.png' />
+<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-1.png?raw=true' />
 
 味付けの「さしすせそ」（もしくは営業トークの「さしすせそ」）を選択 + コピーしてみます。
 
-<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-2.png' />
+<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-2.png?raw=true' />
 
 みなさまご想像通りの結果です www 選択範囲は DOM の走査順序となります。
 
@@ -26,11 +26,11 @@ TABLE { writing-mode : vertical-lr; }
 
 こんな感じに行と列を入れ替えることができます。
 
-<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-3.png' />
+<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-3.png?raw=true' />
 
 これで行（入れ替え前の列）のテキスト選択を …
 
-<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-4.png' />
+<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-4.png?raw=true' />
 
 できない www やはり選択範囲は DOM の走査順序となります。
 
@@ -47,7 +47,7 @@ TABLE { writing-mode : vertical-lr; }
 
 もう少々実現方法を探求してみましょう。疑似要素の ::selection を使って選択した列以外のセルのスタイルを非選択状態同様に変更してみるというのはどうでしょうか？
 
-<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-5.png' />
+<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-5.png?raw=true' />
 
 おおっ！いい感じで選択できました。この状態から copy イベントでスタイルに応じたデータを取得することで「列のテキスト選択 + コピー」は実現できそうですね。こちらがその bookmarklet になります。
 
@@ -57,21 +57,21 @@ javascript:!function(e,t){const a="selection",n="disabled";0===t.styleSheets.len
 
 ソースコードは [こちら](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt) ですので、必要に応じでカスタマイズしてご利用ください。ちなにみ「列のテキスト選択 + コピー」とはいいつつ、実際にはこんなことも可能です。
 
-<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-6.png' />
+<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-6.png?raw=true' />
 
 もう必要ありませんが writing-mode で vertical-lr を指定した場合はこんな結果になります。
 
-<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-7.png' />
+<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-7.png?raw=true' />
 
 ## ブラウザアプリケーションによるサポート
 
 あらためて思うところですが 99% のユーザーは
 
-<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-2.png' />
+<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-2.png?raw=true' />
 
 ではなく
 
-<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-5.png' />
+<img src='https://github.com/nakayama-kazuki/2020/tree/master/bookmarklets/column/img/50-5.png?raw=true' />
 
 な結果を期待していると思います。
 また、これは排他的ではなくブラウザアプリケーションの実装次第で行選択 / 列選択 / 任意範囲選択をそれぞれ実行することは可能だと思います（実際にサンプルの bookmarklet は概ねそのような挙動になっています）。また、これは差別化要因となりブラウザ選択のモチベーションにもつながるはずです。
