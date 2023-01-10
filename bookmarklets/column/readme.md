@@ -16,7 +16,7 @@ TABLE 要素で作ったひらがな五十音表から
 
 やはり www みなさまご想像通りの結果です。文書の要素走査順序で「さ」から「そ」までの選択範囲となりました。
 
-## writing-mode
+## そうだ writing-mode を使ってみよう
 
 行のテキスト選択ならば可能ということで …
 
@@ -47,7 +47,7 @@ TABLE { writing-mode : vertical-lr; }
 
 といった対応をされているようです。あとは力業の bookmarklet で実現できないこともないですが、選択時に新たなスタイルを適用する方式の場合、コラボレーションツールや SaaS が提供する UX への悪影響が気になります。加えてブラックボックス化されたアドオンだと安全性の観点で少々の不安になりますね。
 
-## ::selection 疑似要素
+## そうだ ::selection 疑似要素を使ってみよう
 
 もう少々スマートな（？）実現方法を探求してみましょう。疑似要素の ::selection を使って選択した列以外に
 
@@ -91,7 +91,7 @@ bookmarklet 元の [ソースコードはこちら](https://github.com/nakayama-
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-7.png' />
 
-## ブラウザアプリケーションによるサポート
+## ブラウザアプリケーションによるネイティブ実装
 
 あらためて思うことですが 99% のユーザーは TABLE 要素でテキスト選択 + コピーをする時には
 
