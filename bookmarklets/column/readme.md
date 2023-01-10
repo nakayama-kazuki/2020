@@ -1,4 +1,4 @@
-# 列のテキスト選択 + コピーしたいのだが
+# 列のテキスト選択 + コピーをしたいのだが
 
 こんにちは、エンジニアの中山です。
 
@@ -18,7 +18,7 @@ TABLE 要素で作ったひらがな五十音表から
 
 ## writing-mode
 
-行のテキスト選択が可能なのだから …
+行のテキスト選択ならば可能ということで …
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-8.png' />
 
@@ -36,16 +36,16 @@ TABLE { writing-mode : vertical-lr; }
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-4.png' />
 
-できない www 先ほどと同様、走査順序で「さ」から「そ」までの選択範囲となりました。
+できない www 先ほどと同様、文書の要素走査順序で「さ」から「そ」までの選択範囲となりました。
 
 ## 世の皆さんはどうしている？
 
 列のテキスト選択 + コピー … のニーズは確実にあるはずですが、ネットで検索したり周囲の意見をたずねてみたところ、みなさん
 
 - ブラウザにアドオンを導入する
-- エクセルにはりつける
+- エクセルにはりつけてから列選択
 
-といった対応をされているようです。あとは力業の bookmarklet で実現できないこともないですが、選択時に新たなスタイルを適用する方式の場合、コラボレーションツールや SaaS が提供する UX への悪影響が気になります。加えてブラックボックス化されたアドオンだと安全性の観点で不安を感じることもあります ^^;
+といった対応をされているようです。あとは力業の bookmarklet で実現できないこともないですが、選択時に新たなスタイルを適用する方式の場合、コラボレーションツールや SaaS が提供する UX への悪影響が気になります。加えてブラックボックス化されたアドオンだと安全性の観点で少々の不安になりますね。
 
 ## ::selection 疑似要素
 
@@ -77,17 +77,17 @@ document.addEventListener('copy', ev => {
 
 として start ～ end の範囲でスタイルに応じたデータを取得することで「列のテキスト選択 + コピー」は実現できそうですね。
 
-… というわけで、こちらは上記方針で細かい部分（TD, TH 両方の考慮や入れ子の TABLE 要素への対応）含めて実装した bookmarklet です。
+… というわけで、こちらは上記方針で細部（TD, TH 両方の考慮や入れ子の TABLE 要素への対応）含めて実装した bookmarklet です。
 
 ```
 javascript:!function(e,t){const a="selection",n="disabled";0===t.styleSheets.length&&document.getElementsByTagName("SCRIPT").item(0).parentNode.appendChild(document.createElement("STYLE"));let s=String.fromCharCode(32),o="[data-"+a+'="'+n+'"]',r="TH"+o+"::selection,TH"+o+s+"*::selection,TD"+o+"::selection,TD"+o+s+"*::selection{background-color: transparent !important;}";function i(...e){return function(t){if(t.nodeType===Node.ELEMENT_NODE)for(let a of e)if(t.nodeName.toUpperCase()===a)return!0;return!1}}t.styleSheets[0].insertRule(r),HTMLTableElement.prototype.startCustomSelect=function(){this.getElementsByTagName("TABLE").length>0||(this._exData||(this._exData={},this._exData.debug=function(e){console.log(e)},this._exData.handleMouseMove=function(e){1==e.buttons&&i("TH","TD")(e.target)&&e.target.dataset[a]===n&&(this._exData.debug("added target"),delete e.target.dataset[a])}.bind(this),this._exData.handleMouseLeave=function(t){1!=t.buttons&&e.getSelection().getRangeAt(0).collapse(),Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{delete e.dataset[a]})),this.removeEventListener("mousemove",this._exData.handleMouseMove),this.removeEventListener("mouseleave",this._exData.handleMouseLeave),this._exData.debug("stopped"),this._exData.started=!1}.bind(this),this._exData.started=!1),this._exData.started||(this.addEventListener("mousemove",this._exData.handleMouseMove),this.addEventListener("mouseleave",this._exData.handleMouseLeave)),Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{e.dataset[a]=n})),this._exData.debug("started"),this._exData.started=!0)},HTMLTableElement.prototype.getSelectedData=function(){let t=[];if(!this._exData||!this._exData.started)return t;let s=e.getSelection().getRangeAt(0),o=s.startContainer.parentElement.closest("TH, TD"),r=s.endContainer.parentElement.closest("TH, TD"),i=function(e){try{return[e.parentNode.rowIndex,e.cellIndex]}catch(e){return[-1,-1]}};this._exData.debug("range : ("+i(o).join(",")+") - ("+i(r).join(",")+")");let l=!1;return Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{l?e===r?(t.push(r.innerText.substring(0,s.endOffset)),l=!1):e.dataset[a]!==n&&t.push(e.innerText):e===o&&(t.push(o.innerText.substring(s.startOffset)),l=!0)})),t},t.addEventListener("selectstart",(e=>{let t=e.composedPath().find(i("TABLE"));t&&t.startCustomSelect()})),t.addEventListener("copy",(e=>{let a=[];Array.prototype.slice.call(t.getElementsByTagName("TABLE")).forEach((e=>{a=a.concat(e.getSelectedData())})),a.length>0&&async function(e){await navigator.clipboard.writeText(e)}(a.join("\n"))}))}(window,document);void(0);
 ```
 
-元のソースコードは [こちら](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt) にありますので、必要に応じでカスタマイズしてご利用ください。ちなにみ「列のテキスト選択 + コピー」とはいいつつ、実際にはこのような選択 + コピーも可能です。
+bookmarklet 元の [ソースコードはこちら](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt) にありますので、必要に応じでカスタマイズしてご利用ください。ちなにみ「列のテキスト選択 + コピー」とはいいつつ、このような選択 + コピーも可能です。
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-6.png' />
 
-先ほど挫折した writing-mode での「さしすせそ」選択はこのようになります。
+先ほど挫折した writing-mode での「さしすせそ」選択はこうなります。
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-7.png' />
 
