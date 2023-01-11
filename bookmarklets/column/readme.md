@@ -53,7 +53,7 @@ TABLE { writing-mode : vertical-lr; }
 
 ## ::selection
 
-もう少々安全かつ副作用の少ない方法を探求してみましょう。疑似要素の ::selection を使って選択した列 **以外** に
+もう少々安全かつ副作用の少ない方法を探求してみましょう。疑似要素の ::selection を使って選択した列 **以外のセル** に
 
 ```
 TD::selection { background-color: transparent; }
