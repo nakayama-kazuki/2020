@@ -53,7 +53,7 @@ TABLE { writing-mode : vertical-lr; }
 
 ## ::selection
 
-もう少し安全かつ副作用の少ない方法を探求してみましょう。疑似要素の ::selection を使って、選択した列 **以外のセル** に
+もう少し安全かつ副作用の少ない方法を探求してみましょう。疑似要素の ::selection を使って、選択したセル **以外のセル** に
 
 ```
 TD::selection { background-color: transparent; }
@@ -87,7 +87,9 @@ document.addEventListener('copy', ev => {
 javascript:!function(e,t){const a="selection",n="disabled",s=(e=>{let t={};for(name in e)t[name]=String.fromCharCode(e[name]);return t})({TAB:9,LF:10,SP:32});t.getElementsByTagName("*").item(0).appendChild(t.createElement("STYLE"));let o="[data-"+a+'="'+n+'"]',r="TH"+o+"::selection,TH"+o+s.SP+"*::selection,TD"+o+"::selection,TD"+o+s.SP+"*::selection{background-color: transparent !important;}";function i(...e){return function(t){if(t.nodeType===Node.ELEMENT_NODE)for(let a of e)if(t.nodeName.toUpperCase()===a)return!0;return!1}}t.styleSheets[t.styleSheets.length-1].insertRule(r),HTMLTableElement.prototype.startCustomSelect=function(){this.getElementsByTagName("TABLE").length>0||(this._exData||(this._exData={},this._exData.debug=function(e){console.log(e)},this._exData.handleMouseMove=function(e){1==e.buttons&&i("TH","TD")(e.target)&&e.target.dataset[a]===n&&(this._exData.debug("added target"),delete e.target.dataset[a])}.bind(this),this._exData.handleMouseLeave=function(t){1!=t.buttons&&e.getSelection().getRangeAt(0).collapse(),Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{delete e.dataset[a]})),this.removeEventListener("mousemove",this._exData.handleMouseMove),this.removeEventListener("mouseleave",this._exData.handleMouseLeave),this._exData.debug("stopped"),this._exData.started=!1}.bind(this),this._exData.started=!1),this._exData.started||(this.addEventListener("mousemove",this._exData.handleMouseMove),this.addEventListener("mouseleave",this._exData.handleMouseLeave)),Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{e.dataset[a]=n})),this._exData.debug("started"),this._exData.started=!0)},HTMLTableElement.prototype.getSelectedData=function(){let t=[];if(!this._exData||!this._exData.started)return t;let s=e.getSelection().getRangeAt(0),o=s.startContainer.parentElement.closest("TH, TD"),r=s.endContainer.parentElement.closest("TH, TD"),i=function(e){try{return[e.parentNode.rowIndex,e.cellIndex]}catch(e){return[-1,-1]}};this._exData.debug("range : ("+i(o).join(",")+") - ("+i(r).join(",")+")");let l=!1,d=-1;return Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{let i=e.closest("TR").rowIndex;i>d&&(d=i,t[d]=[]),l?e===r?(t[d].push(r.innerText.substring(0,s.endOffset)),l=!1):e.dataset[a]!==n&&t[d].push(e.innerText):e===o&&(t[d].push(o.innerText.substring(s.startOffset)),l=!0)})),t.filter((e=>e))},t.addEventListener("selectstart",(e=>{let t=e.composedPath().find(i("TABLE"));t&&t.startCustomSelect()})),t.addEventListener("copy",(e=>{let a=[];if(Array.prototype.slice.call(t.getElementsByTagName("TABLE")).forEach((e=>{a=a.concat(e.getSelectedData())})),a.length>0){for(let e=0;e<a.length;e++)a[e]=a[e].join(s.TAB);!async function(e){await navigator.clipboard.writeText(e)}(a.join(s.LF))}}))}(window,document);void(0);
 ```
 
-元となる [ソースコードはこちら](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt) にありますので、必要に応じでカスタマイズしてご利用ください。ちなみに「列のテキスト選択 + コピー」とはいいつつも、このような範囲の選択 + コピーも可能です。
+[デモページ](https://pj-corridor.net/table-demo/demo.html) を用意したので UX をご確認ください。
+
+元となるソースコードも [こちら](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt) で公開してますので、必要に応じでカスタマイズしてご利用ください。ちなみに「列のテキスト選択 + コピー」とはいいつつも、このような範囲の選択 + コピーも可能です。
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-6.png' />
 
