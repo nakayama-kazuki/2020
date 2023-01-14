@@ -5,23 +5,31 @@ const DATTR = {
 	V : 'disabled'
 };
 
-if (d.styleSheets.length === 0) {
-	document.getElementsByTagName('SCRIPT').item(0).parentNode.appendChild(document.createElement('STYLE'));
-}
+const CODE = (obj => {
+	let ret = {};
+	for (name in obj) {
+		ret[name] = String.fromCharCode(obj[name]);
+	}
+	return ret;
+})({
+	TAB : 9,
+	LF : 10,
+	SP : 32
+});
 
-let sp = String.fromCharCode(32);
+d.getElementsByTagName('*').item(0).appendChild(d.createElement('STYLE'));
 let attrsel = '[data-' + DATTR.N + '="' + DATTR.V + '"]';
 let style =
 	'TH' + attrsel +
 	'::selection,' +
-	'TH' + attrsel + sp + '*' +
+	'TH' + attrsel + CODE.SP + '*' +
 	'::selection,' +
 	'TD' + attrsel +
 	'::selection,' +
-	'TD' + attrsel + sp + '*' +
+	'TD' + attrsel + CODE.SP + '*' +
 	'::selection' +
 	'{background-color: transparent !important;}';
-d.styleSheets[0].insertRule(style);
+d.styleSheets[d.styleSheets.length - 1].insertRule(style);
 
 async function copyToClipboard(text)
 {
@@ -94,9 +102,9 @@ HTMLTableElement.prototype.startCustomSelect = function() {
 };
 
 HTMLTableElement.prototype.getSelectedData = function() {
-	let buff = [];
+	let rows = [];
 	if (!this._exData || !this._exData.started) {
-		return buff;
+		return rows;
 	}
 	let range = w.getSelection().getRangeAt(0);
 	let s_cell = range.startContainer.parentElement.closest('TH, TD');
@@ -110,24 +118,31 @@ HTMLTableElement.prototype.getSelectedData = function() {
 	};
 	this._exData.debug('range : (' + _index(s_cell).join(',') + ') - (' + _index(e_cell).join(',') + ')');
 	let _in_range = false;
+	let _cur_rowIndex = -1;
 	Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
+		let _new_rowIndex = cell.closest('TR').rowIndex;
+		if (_new_rowIndex > _cur_rowIndex) {
+			_cur_rowIndex = _new_rowIndex;
+			rows[_cur_rowIndex] = [];
+		}
 		if (_in_range) {
 			if (cell === e_cell) {
-				buff.push(e_cell.innerText.substring(0, range.endOffset));
+				rows[_cur_rowIndex].push(e_cell.innerText.substring(0, range.endOffset));
 				_in_range = false;
 			} else {
 				if (cell.dataset[DATTR.N] !== DATTR.V) {
-					buff.push(cell.innerText);
+					rows[_cur_rowIndex].push(cell.innerText);
 				}
 			}
 		} else {
 			if (cell === s_cell) {
-				buff.push(s_cell.innerText.substring(range.startOffset));
+				rows[_cur_rowIndex].push(s_cell.innerText.substring(range.startOffset));
 				_in_range = true;
 			}
 		}
 	});
-	return buff;
+	/* remove empty */
+	return rows.filter(row => {return row;});
 };
 
 d.addEventListener('selectstart', ev => {
@@ -138,12 +153,15 @@ d.addEventListener('selectstart', ev => {
 });
 
 d.addEventListener('copy', ev => {
-	let buff = [];
+	let rows = [];
 	Array.prototype.slice.call(d.getElementsByTagName('TABLE')).forEach(tbl => {
-		buff = buff.concat(tbl.getSelectedData());
+		rows = rows.concat(tbl.getSelectedData());
 	});
-	if (buff.length > 0) {
-		copyToClipboard(buff.join("\n"));
+	if (rows.length > 0) {
+		for (let i = 0; i < rows.length; i++) {
+			rows[i] = rows[i].join(CODE.TAB);
+		}
+		copyToClipboard(rows.join(CODE.LF));
 	}
 });
 
