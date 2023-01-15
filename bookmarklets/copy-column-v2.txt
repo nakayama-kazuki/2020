@@ -1,11 +1,21 @@
 (function(w, d) {
 
-const DATTR = {
+function createUnique()
+{
+	/* return  '_' + Math.random().toString(32).substring(2); */
+	return Symbol();
+}
+
+const exData = createUnique();
+const startCustomSelect = createUnique();
+const getSelectedData = createUnique();
+
+const DATAATTR = {
 	N : 'selection',
 	V : 'disabled'
 };
 
-const CODE = (obj => {
+const STR = (obj => {
 	let ret = {};
 	for (name in obj) {
 		ret[name] = String.fromCharCode(obj[name]);
@@ -18,15 +28,15 @@ const CODE = (obj => {
 });
 
 d.getElementsByTagName('*').item(0).appendChild(d.createElement('STYLE'));
-let attrsel = '[data-' + DATTR.N + '="' + DATTR.V + '"]';
+let attrsel = '[data-' + DATAATTR.N + '="' + DATAATTR.V + '"]';
 let style =
 	'TH' + attrsel +
 	'::selection,' +
-	'TH' + attrsel + CODE.SP + '*' +
+	'TH' + attrsel + STR.SP + '*' +
 	'::selection,' +
 	'TD' + attrsel +
 	'::selection,' +
-	'TD' + attrsel + CODE.SP + '*' +
+	'TD' + attrsel + STR.SP + '*' +
 	'::selection' +
 	'{background-color: transparent !important;}';
 d.styleSheets[d.styleSheets.length - 1].insertRule(style);
@@ -40,7 +50,7 @@ function forceRedraw(in_elem)
 {
 	let stored = in_elem.style.opacity;
 	in_elem.style.opacity = Number.parseFloat(w.getComputedStyle(in_elem).opacity) * 0.99;
-	w.setTimeout(() => {
+	window.setTimeout(() => {
 		in_elem.style.opacity = stored;
 	}, 0);
 }
@@ -59,17 +69,13 @@ function funcNodeIsElem(...in_nodeNames)
 	};
 }
 
-HTMLTableElement.prototype.startCustomSelect = function() {
-	if (this.getElementsByTagName('TABLE').length > 0) {
-		/* target is inner table */
-		return;
-	}
-	if (!this._exData) {
-		this._exData = {};
-		this._exData.debug = function(in_msg) {
+HTMLTableElement.prototype[startCustomSelect] = function() {
+	if (!this[exData]) {
+		this[exData] = {};
+		this[exData].debug = function(in_msg) {
 			console.log(in_msg);
 		};
-		this._exData.handleMouseMove = (function(ev) {
+		this[exData].handleMouseMove = (function(ev) {
 			const right_button = 1;
 			if (ev.buttons != right_button) {
 				return;
@@ -77,46 +83,46 @@ HTMLTableElement.prototype.startCustomSelect = function() {
 			if (!(funcNodeIsElem('TH', 'TD'))(ev.target)) {
 				return;
 			}
-			if (ev.target.dataset[DATTR.N] === DATTR.V) {
-				this._exData.debug('added target');
-				delete ev.target.dataset[DATTR.N];
+			if (ev.target.dataset[DATAATTR.N] === DATAATTR.V) {
+				this[exData].debug('added target');
+				delete ev.target.dataset[DATAATTR.N];
 			}
 		}).bind(this);
-		this._exData.handleMouseLeave = (function(ev) {
+		this[exData].handleMouseLeave = (function(ev) {
 			const right_button = 1;
 			if (ev.buttons != right_button) {
 				/* for my favorite ux :-p */
 				w.getSelection().getRangeAt(0).collapse();
 			}
 			Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
-				delete cell.dataset[DATTR.N];
+				delete cell.dataset[DATAATTR.N];
 			});
 			if (w.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1) {
-				this._exData.debug('use trick for Firefox');
+				this[exData].debug('use trick for Firefox');
 				forceRedraw(this);
 			}
-			this.removeEventListener('mousemove', this._exData.handleMouseMove);
-			this.removeEventListener('mouseleave', this._exData.handleMouseLeave);
-			this._exData.debug('stopped');
-			this._exData.started = false;
+			this.removeEventListener('mousemove', this[exData].handleMouseMove);
+			this.removeEventListener('mouseleave', this[exData].handleMouseLeave);
+			this[exData].debug('stopped');
+			this[exData].started = false;
 		}).bind(this);
-		this._exData.started = false;
+		this[exData].started = false;
 	}
-	if (!this._exData.started) {
-		this.addEventListener('mousemove', this._exData.handleMouseMove);
-		this.addEventListener('mouseleave', this._exData.handleMouseLeave);
+	if (!this[exData].started) {
+		this.addEventListener('mousemove', this[exData].handleMouseMove);
+		this.addEventListener('mouseleave', this[exData].handleMouseLeave);
 	}
 	/* all clear when restart */
 	Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
-		cell.dataset[DATTR.N] = DATTR.V;
+		cell.dataset[DATAATTR.N] = DATAATTR.V;
 	});
-	this._exData.debug('started');
-	this._exData.started = true;
+	this[exData].debug('started');
+	this[exData].started = true;
 };
 
-HTMLTableElement.prototype.getSelectedData = function() {
+HTMLTableElement.prototype[getSelectedData] = function() {
 	let rows = [];
-	if (!this._exData || !this._exData.started) {
+	if (!this[exData] || !this[exData].started) {
 		return rows;
 	}
 	let range = w.getSelection().getRangeAt(0);
@@ -129,7 +135,7 @@ HTMLTableElement.prototype.getSelectedData = function() {
 			return [-1, -1];
 		}
 	};
-	this._exData.debug('range : (' + _index(s_cell).join(',') + ') - (' + _index(e_cell).join(',') + ')');
+	this[exData].debug('range : (' + _index(s_cell).join(',') + ') - (' + _index(e_cell).join(',') + ')');
 	let _in_range = false;
 	let _cur_rowIndex = -1;
 	Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
@@ -143,7 +149,7 @@ HTMLTableElement.prototype.getSelectedData = function() {
 				rows[_cur_rowIndex].push(e_cell.innerText.substring(0, range.endOffset));
 				_in_range = false;
 			} else {
-				if (cell.dataset[DATTR.N] !== DATTR.V) {
+				if (cell.dataset[DATAATTR.N] !== DATAATTR.V) {
 					rows[_cur_rowIndex].push(cell.innerText);
 				}
 			}
@@ -160,21 +166,27 @@ HTMLTableElement.prototype.getSelectedData = function() {
 
 d.addEventListener('selectstart', ev => {
 	let table = ev.composedPath().find(funcNodeIsElem('TABLE'));
-	if (table) {
-		table.startCustomSelect();
+	if (!table) {
+		/* not in table */
+		return;
 	}
+	if (table.getElementsByTagName('TABLE').length > 0) {
+		/* target should be inner table */
+		return;
+	}
+	table[startCustomSelect]();
 });
 
 d.addEventListener('copy', ev => {
 	let rows = [];
 	Array.prototype.slice.call(d.getElementsByTagName('TABLE')).forEach(tbl => {
-		rows = rows.concat(tbl.getSelectedData());
+		rows = rows.concat(tbl[getSelectedData]());
 	});
 	if (rows.length > 0) {
 		for (let i = 0; i < rows.length; i++) {
-			rows[i] = rows[i].join(CODE.TAB);
+			rows[i] = rows[i].join(STR.TAB);
 		}
-		copyToClipboard(rows.join(CODE.LF));
+		copyToClipboard(rows.join(STR.LF));
 	}
 });
 
