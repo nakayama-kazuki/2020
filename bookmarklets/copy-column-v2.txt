@@ -36,6 +36,15 @@ async function copyToClipboard(text)
 	await navigator.clipboard.writeText(text);
 }
 
+function forceRedraw(in_elem)
+{
+	let stored = in_elem.style.opacity;
+	in_elem.style.opacity = Number.parseFloat(w.getComputedStyle(in_elem).opacity) * 0.99;
+	w.setTimeout(() => {
+		in_elem.style.opacity = stored;
+	}, 0);
+}
+
 function funcNodeIsElem(...in_nodeNames)
 {
 	return function(in_node) {
@@ -82,6 +91,10 @@ HTMLTableElement.prototype.startCustomSelect = function() {
 			Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
 				delete cell.dataset[DATTR.N];
 			});
+			if (w.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1) {
+				this._exData.debug('use trick for Firefox');
+				forceRedraw(this);
+			}
 			this.removeEventListener('mousemove', this._exData.handleMouseMove);
 			this.removeEventListener('mouseleave', this._exData.handleMouseLeave);
 			this._exData.debug('stopped');
