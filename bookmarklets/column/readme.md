@@ -84,7 +84,7 @@ document.addEventListener('copy', ev => {
 … というわけで、上記方針で細部（TD, TH 両方の考慮やネストした要素への対応）含めて実装した bookmarklet がこちらです。
 
 ```
-javascript:!function(e,t){const a="selection",n="disabled",s=(e=>{let t={};for(name in e)t[name]=String.fromCharCode(e[name]);return t})({TAB:9,LF:10,SP:32});t.getElementsByTagName("*").item(0).appendChild(t.createElement("STYLE"));let o="[data-"+a+'="'+n+'"]',r="TH"+o+"::selection,TH"+o+s.SP+"*::selection,TD"+o+"::selection,TD"+o+s.SP+"*::selection{background-color: transparent !important;}";function i(...e){return function(t){if(t.nodeType===Node.ELEMENT_NODE)for(let a of e)if(t.nodeName.toUpperCase()===a)return!0;return!1}}t.styleSheets[t.styleSheets.length-1].insertRule(r),HTMLTableElement.prototype.startCustomSelect=function(){this.getElementsByTagName("TABLE").length>0||(this._exData||(this._exData={},this._exData.debug=function(e){console.log(e)},this._exData.handleMouseMove=function(e){1==e.buttons&&i("TH","TD")(e.target)&&e.target.dataset[a]===n&&(this._exData.debug("added target"),delete e.target.dataset[a])}.bind(this),this._exData.handleMouseLeave=function(t){1!=t.buttons&&e.getSelection().getRangeAt(0).collapse(),Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{delete e.dataset[a]})),-1!==e.navigator.userAgent.toLowerCase().indexOf("firefox")&&(this._exData.debug("use trick for Firefox"),function(t){let a=t.style.opacity;t.style.opacity=.99*Number.parseFloat(e.getComputedStyle(t).opacity),e.setTimeout((()=>{t.style.opacity=a}),0)}(this)),this.removeEventListener("mousemove",this._exData.handleMouseMove),this.removeEventListener("mouseleave",this._exData.handleMouseLeave),this._exData.debug("stopped"),this._exData.started=!1}.bind(this),this._exData.started=!1),this._exData.started||(this.addEventListener("mousemove",this._exData.handleMouseMove),this.addEventListener("mouseleave",this._exData.handleMouseLeave)),Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{e.dataset[a]=n})),this._exData.debug("started"),this._exData.started=!0)},HTMLTableElement.prototype.getSelectedData=function(){let t=[];if(!this._exData||!this._exData.started)return t;let s=e.getSelection().getRangeAt(0),o=s.startContainer.parentElement.closest("TH, TD"),r=s.endContainer.parentElement.closest("TH, TD"),i=function(e){try{return[e.parentNode.rowIndex,e.cellIndex]}catch(e){return[-1,-1]}};this._exData.debug("range : ("+i(o).join(",")+") - ("+i(r).join(",")+")");let l=!1,d=-1;return Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{let i=e.closest("TR").rowIndex;i>d&&(d=i,t[d]=[]),l?e===r?(t[d].push(r.innerText.substring(0,s.endOffset)),l=!1):e.dataset[a]!==n&&t[d].push(e.innerText):e===o&&(t[d].push(o.innerText.substring(s.startOffset)),l=!0)})),t.filter((e=>e))},t.addEventListener("selectstart",(e=>{let t=e.composedPath().find(i("TABLE"));t&&t.startCustomSelect()})),t.addEventListener("copy",(e=>{let a=[];if(Array.prototype.slice.call(t.getElementsByTagName("TABLE")).forEach((e=>{a=a.concat(e.getSelectedData())})),a.length>0){for(let e=0;e<a.length;e++)a[e]=a[e].join(s.TAB);!async function(e){await navigator.clipboard.writeText(e)}(a.join(s.LF))}}))}(window,document);void(0);
+javascript:!function(e,t){function n(){return Symbol()}const o=n(),s=n(),r=n(),a="selection",i="disabled",l=(e=>{let t={};for(name in e)t[name]=String.fromCharCode(e[name]);return t})({TAB:9,LF:10,SP:32});t.getElementsByTagName("*").item(0).appendChild(t.createElement("STYLE"));let d="[data-"+a+'="'+i+'"]',c="TH"+d+"::selection,TH"+d+l.SP+"*::selection,TD"+d+"::selection,TD"+d+l.SP+"*::selection{background-color: transparent !important;}";function u(...e){return function(t){if(t.nodeType===Node.ELEMENT_NODE)for(let n of e)if(t.nodeName.toUpperCase()===n)return!0;return!1}}t.styleSheets[t.styleSheets.length-1].insertRule(c),HTMLTableElement.prototype[s]=function(){this[o]||(this[o]={},this[o].debug=function(e){console.log(e)},this[o].handleMouseMove=function(e){1==e.buttons&&u("TH","TD")(e.target)&&e.target.dataset[a]===i&&(this[o].debug("added target"),delete e.target.dataset[a])}.bind(this),this[o].handleMouseLeave=function(t){1!=t.buttons&&e.getSelection().getRangeAt(0).collapse(),Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{delete e.dataset[a]})),-1!==e.navigator.userAgent.toLowerCase().indexOf("firefox")&&(this[o].debug("use trick for Firefox"),function(t){let n=t.style.opacity;t.style.opacity=.99*Number.parseFloat(e.getComputedStyle(t).opacity),window.setTimeout((()=>{t.style.opacity=n}),0)}(this)),this.removeEventListener("mousemove",this[o].handleMouseMove),this.removeEventListener("mouseleave",this[o].handleMouseLeave),this[o].debug("stopped"),this[o].started=!1}.bind(this),this[o].started=!1),this[o].started||(this.addEventListener("mousemove",this[o].handleMouseMove),this.addEventListener("mouseleave",this[o].handleMouseLeave)),Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{e.dataset[a]=i})),this[o].debug("started"),this[o].started=!0},HTMLTableElement.prototype[r]=function(){let t=[];if(!this[o]||!this[o].started)return t;let n=e.getSelection().getRangeAt(0),s=n.startContainer.parentElement.closest("TH, TD"),r=n.endContainer.parentElement.closest("TH, TD"),l=function(e){try{return[e.parentNode.rowIndex,e.cellIndex]}catch(e){return[-1,-1]}};this[o].debug("range : ("+l(s).join(",")+") - ("+l(r).join(",")+")");let d=!1,c=-1;return Array.prototype.slice.call(this.querySelectorAll("TH, TD")).forEach((e=>{let o=e.closest("TR").rowIndex;o>c&&(c=o,t[c]=[]),d?e===r?(t[c].push(r.innerText.substring(0,n.endOffset)),d=!1):e.dataset[a]!==i&&t[c].push(e.innerText):e===s&&(t[c].push(s.innerText.substring(n.startOffset)),d=!0)})),t.filter((e=>e))},t.addEventListener("selectstart",(e=>{let t=e.composedPath().find(u("TABLE"));t&&(t.getElementsByTagName("TABLE").length>0||t[s]())})),t.addEventListener("copy",(e=>{let n=[];if(Array.prototype.slice.call(t.getElementsByTagName("TABLE")).forEach((e=>{n=n.concat(e[r]())})),n.length>0){for(let e=0;e<n.length;e++)n[e]=n[e].join(l.TAB);!async function(e){await navigator.clipboard.writeText(e)}(n.join(l.LF))}}))}(window,document);void(0);
 ```
 
 [デモページ](https://pj-corridor.net/table-demo/demo.html) を用意したので UX をご確認ください。
@@ -96,6 +96,34 @@ javascript:!function(e,t){const a="selection",n="disabled",s=(e=>{let t={};for(n
 先ほど挫折した writing-mode での「さしすせそ」選択はこうなります。
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-7.png' />
+
+## ブラウザ拡張
+
+bookmarklet 実行のひと手間すら惜しい各位にはブラウザ拡張もおすすめです。以下 Chrome の場合ですが、
+
+1. manifest.json と javascript の [ソースコード](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt)  を適当なフォルダに置く
+2. Chrome の設定画面
+3. デベロッパーモードに変更
+4. パッケージ化されていない拡張機能を読み込む、で上記フォルダを指定
+
+で常に「列のテキスト選択 + コピー」を実行できるようになります。以下は manifest.json のサンプルです。
+
+```
+{
+    "name" : "copy-column",
+    "description" : "customize selecting & copying table cells",
+    "version" : "1.0.0",
+    "manifest_version" : 3,
+    "content_scripts" : [
+        {
+            "matches" : ["*://*/*"],
+            "js" : ["copy-column.js"],
+            "run_at" : "document_idle",
+            "all_frames" : true
+        }
+    ]
+}
+```
 
 ## ネイティブ実装提案
 
@@ -109,7 +137,7 @@ javascript:!function(e,t){const a="selection",n="disabled",s=(e=>{let t={};for(n
 
 の結果を期待しているはずです。
 
-また、選択範囲は排他的ではなく、ブラウザアプリケーションの実装次第で行選択 / 列選択 / 任意範囲選択をそれぞれ実現することは可能だと思います（実際にサンプルの bookmarklet は概ねそのような挙動です）。さらに、これは差別化要因となりブラウザ選択のモチベーションにもつながるはずです。
+なのでこのニーズに対しては bookmarklet やブラウザ拡張ではなく、ブラウザアプリケーションのネイティブ実装提案による解決を期待したいところです。さらに実装次第で行選択 / 列選択 / 任意範囲選択のそれぞれ実現可能な UX は提供可能だと思います（実際にサンプルの bookmarklet は概ねそのような挙動です）。これができれば差別化要因となりブラウザ選択のモチベーションにもつながるはずです（私見）。
 
-ですので、スルーされるとは思いつつブラウザベンダにネイティブ実装の提案をしてみます。続報（ないかもしれないけど）乞うご期待！
+そんなわけで、スルーされるとは思いつつベンダにネイティブ実装の提案をしてみます。続報（ないかもしれないけど）乞うご期待！
 
