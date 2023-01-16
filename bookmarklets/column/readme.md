@@ -120,7 +120,7 @@ bookmarklet 実行のひと手間すら惜しい、そんな各位にはブラ�
 
 次いで、以下は Chrome における手順です（Firefox でも大筋は一緒です）。
 
-1. 適当なフォルダに manifest.json と [ソースコード](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt)  を copy-column.js というファイル名で保存
+1. 適当なフォルダに manifest.json と [ソースコード](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt)  を manifest.json 内に指定したファイル名（今回は copy-column.js）で保存
 2. Chrome の設定画面を開く
 3. デベロッパーモードに変更する
 4. パッケージ化されていない拡張機能を読み込む、で上のフォルダを指定する
