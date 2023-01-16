@@ -43,13 +43,13 @@ TABLE { writing-mode : vertical-lr; }
 列のテキスト選択 + コピー … のニーズは確実にあるはずですが、ネットで検索したり周囲の意見をたずねてみたところ、みなさん
 
 - Excel にはりつけてから列選択
-- ブラウザに拡張機能を導入する
+- ウェブストアから拡張機能を導入
 
 といった対応をされているようです。
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-9.png' />
 
-あとは力技の bookmarklet で実現できないこともないですが、選択時に新たなスタイルを適用する方式の場合、コラボレーションツールや SaaS が提供する UX への副作用が気になります。加えてブラックボックス化された拡張機能だと安全性の観点で少々不安になりますね。
+後者については力技 DOM 操作で実現できないこともないですが、コラボレーションツールや SaaS が提供する UX への副作用が気になります。加えてブラックボックス化された拡張機能だと安全性の観点で少々不安になりますね。
 
 ## ::selection
 
@@ -97,9 +97,9 @@ javascript:!function(e,t){function n(){return Symbol()}const o=n(),s=n(),r=n(),a
 
 <img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/50-7.png' />
 
-## ブラウザ拡張
+## 野良拡張機能
 
-bookmarklet 実行のひと手間すら惜しい、そんな各位にはブラウザ拡張もおすすめです。まずは manifest.json を用意してください。
+bookmarklet 実行のひと手間すら惜しい、そんな各位には野良拡張機能もおすすめです。まずは manifest.json を用意してください。
 
 ```
 {
@@ -118,12 +118,14 @@ bookmarklet 実行のひと手間すら惜しい、そんな各位にはブラ�
 }
 ```
 
-次いで、以下は Chrome における手順です（Firefox でも大筋は一緒です）。
+次いで、以下は Chrome における手順です（Firefox でも大筋の流れは一緒です）。
 
 1. 適当なフォルダに manifest.json と [ソースコード](https://github.com/nakayama-kazuki/2020/blob/master/bookmarklets/copy-column-v2.txt)  を manifest.json 内に指定したファイル名（今回は copy-column.js）で保存
-2. Chrome の設定画面を開く
+2. 設定画面（chrome://settings/）を開く
 3. デベロッパーモードに変更する
-4. パッケージ化されていない拡張機能を読み込む、で上のフォルダを指定する
+4. パッケージ化されていない拡張機能を読み込む、から上のフォルダを指定する
+
+<img src='https://raw.githubusercontent.com/nakayama-kazuki/2020/master/bookmarklets/column/img/ext.png' />
 
 これで常に「列のテキスト選択 + コピー」を実行できるようになりました。
 
