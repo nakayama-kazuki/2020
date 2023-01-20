@@ -1,4 +1,4 @@
-(function(w, d) {
+(async function(w, d) {
 
 function createUnique()
 {
@@ -40,11 +40,6 @@ let style =
 	'::selection' +
 	'{background-color: transparent !important;}';
 d.styleSheets[d.styleSheets.length - 1].insertRule(style);
-
-async function copyToClipboard(text)
-{
-	await navigator.clipboard.writeText(text);
-}
 
 function forceRedraw(in_elem)
 {
@@ -186,7 +181,9 @@ d.addEventListener('copy', ev => {
 		for (let i = 0; i < rows.length; i++) {
 			rows[i] = rows[i].join(STR.TAB);
 		}
-		copyToClipboard(rows.join(STR.LF));
+		(async (in_text) => {
+			await navigator.clipboard.writeText(in_text);
+		})(rows.join(STR.LF));
 	}
 });
 
