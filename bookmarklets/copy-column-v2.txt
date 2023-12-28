@@ -6,7 +6,7 @@ function createUnique()
 	return Symbol();
 }
 
-const exData = createUnique();
+const target = createUnique();
 const startCustomSelect = createUnique();
 const getSelectedData = createUnique();
 
@@ -65,59 +65,112 @@ function funcNodeIsElem(...in_nodeNames)
 }
 
 HTMLTableElement.prototype[startCustomSelect] = function() {
-	if (!this[exData]) {
-		this[exData] = {};
-		this[exData].debug = function(in_msg) {
-			console.log(in_msg);
-		};
-		this[exData].handleMouseMove = (function(ev) {
-			const right_button = 1;
-			if (ev.buttons != right_button) {
-				return;
-			}
-			if (!(funcNodeIsElem('TH', 'TD'))(ev.target)) {
-				return;
-			}
-			if (ev.target.dataset[DATAATTR.N] === DATAATTR.V) {
-				this[exData].debug('added target');
-				delete ev.target.dataset[DATAATTR.N];
-			}
-		}).bind(this);
-		this[exData].handleMouseLeave = (function(ev) {
-			const right_button = 1;
-			if (ev.buttons != right_button) {
-				/* for my favorite ux :-p */
-				w.getSelection().getRangeAt(0).collapse();
-			}
-			Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
-				delete cell.dataset[DATAATTR.N];
-			});
-			if (w.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1) {
-				this[exData].debug('use trick for Firefox');
-				forceRedraw(this);
-			}
-			this.removeEventListener('mousemove', this[exData].handleMouseMove);
-			this.removeEventListener('mouseleave', this[exData].handleMouseLeave);
-			this[exData].debug('stopped');
-			this[exData].started = false;
-		}).bind(this);
-		this[exData].started = false;
+	if (this[target]) {
+		return;
 	}
-	if (!this[exData].started) {
-		this.addEventListener('mousemove', this[exData].handleMouseMove);
-		this.addEventListener('mouseleave', this[exData].handleMouseLeave);
-	}
+	this[target] = {};
+	this[target].rect = {
+		T : Number.POSITIVE_INFINITY,
+		L : Number.POSITIVE_INFINITY,
+		B : Number.NEGATIVE_INFINITY,
+		R : Number.NEGATIVE_INFINITY
+	};
+	this[target].updateRect = (function(in_el) {
+		let updated = false;
+		if (this[target].rect.T > in_el.offsetTop) {
+			this[target].rect.T = in_el.offsetTop;
+			updated = true;
+		}
+		if (this[target].rect.L > in_el.offsetLeft) {
+			this[target].rect.L = in_el.offsetLeft;
+			updated = true;
+		}
+		if (this[target].rect.B < in_el.offsetTop + in_el.offsetHeight) {
+			this[target].rect.B = in_el.offsetTop + in_el.offsetHeight
+			updated = true;
+		}
+		if (this[target].rect.R < in_el.offsetLeft + in_el.offsetWidth) {
+			this[target].rect.R = in_el.offsetLeft + in_el.offsetWidth;
+			updated = true;
+		}
+		return updated;
+	}).bind(this);
+	this[target].inRect = (function(in_el) {
+		if (this[target].rect.T > in_el.offsetTop) {
+			return false;
+		}
+		if (this[target].rect.L > in_el.offsetLeft) {
+			return false;
+		}
+		if (this[target].rect.B < in_el.offsetTop + in_el.offsetHeight) {
+			return false;
+		}
+		if (this[target].rect.R < in_el.offsetLeft + in_el.offsetWidth) {
+			return false;
+		}
+		return true;
+	}).bind(this);
+	this[target].updateDataset = (function() {
+		for (let j = 0; j < this.rows.length; j++) {
+			let row = this.rows.item(j);
+			for (let i = 0; i < row.cells.length; i++) {
+				let cell = row.cells.item(i);
+				if (!cell.dataset[DATAATTR.N]) {
+					continue;
+				}
+				if (this[target].inRect(cell)) {
+					console.log('added target (' + j + ', ' + i + ')');
+					delete cell.dataset[DATAATTR.N];
+				}
+			}
+		}
+	}).bind(this);
+	this[target].handleMouseMove = (function(ev) {
+		const right_button = 1;
+		if (ev.buttons != right_button) {
+			console.log('without right button');
+			return;
+		}
+		if (!(funcNodeIsElem('TH', 'TD'))(ev.target)) {
+			console.log('not TH/TD');
+			return;
+		}
+		if (ev.target.dataset[DATAATTR.N] === DATAATTR.V) {
+			if (this[target].updateRect(ev.target)) {
+				this[target].updateDataset();
+			}
+		}
+	}).bind(this);
+	this[target].handleMouseLeave = (function(ev) {
+		const right_button = 1;
+		if (ev.buttons != right_button) {
+			/* for my favorite ux :-p */
+			w.getSelection().getRangeAt(0).collapse();
+		}
+		Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
+			delete cell.dataset[DATAATTR.N];
+		});
+		if (w.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1) {
+			console.log('use trick for Firefox');
+			forceRedraw(this);
+		}
+		this.removeEventListener('mousemove', this[target].handleMouseMove);
+		this.removeEventListener('mouseleave', this[target].handleMouseLeave);
+		console.log('stopped');
+		delete this[target];
+	}).bind(this);
+	this.addEventListener('mousemove', this[target].handleMouseMove);
+	this.addEventListener('mouseleave', this[target].handleMouseLeave);
 	/* all clear when restart */
 	Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
 		cell.dataset[DATAATTR.N] = DATAATTR.V;
 	});
-	this[exData].debug('started');
-	this[exData].started = true;
+	console.log('started');
 };
 
 HTMLTableElement.prototype[getSelectedData] = function() {
 	let rows = [];
-	if (!this[exData] || !this[exData].started) {
+	if (!this[target]) {
 		return rows;
 	}
 	let range = w.getSelection().getRangeAt(0);
@@ -130,7 +183,7 @@ HTMLTableElement.prototype[getSelectedData] = function() {
 			return [-1, -1];
 		}
 	};
-	this[exData].debug('range : (' + _index(s_cell).join(',') + ') - (' + _index(e_cell).join(',') + ')');
+	console.log('range : (' + _index(s_cell).join(',') + ') - (' + _index(e_cell).join(',') + ')');
 	let _in_range = false;
 	let _cur_rowIndex = -1;
 	Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
@@ -144,7 +197,7 @@ HTMLTableElement.prototype[getSelectedData] = function() {
 				rows[_cur_rowIndex].push(e_cell.innerText.substring(0, range.endOffset));
 				_in_range = false;
 			} else {
-				if (cell.dataset[DATAATTR.N] !== DATAATTR.V) {
+				if (!cell.dataset[DATAATTR.N]) {
 					rows[_cur_rowIndex].push(cell.innerText);
 				}
 			}
