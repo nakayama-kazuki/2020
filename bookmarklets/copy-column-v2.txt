@@ -26,20 +26,6 @@ function createUniqueString()
 	return  'x' + Math.random().toString(32).substring(2);
 }
 
-function forceRedraw(in_elem)
-{
-	let stored = in_elem.style.opacity;
-	in_elem.style.opacity = Number.parseFloat(window.getComputedStyle(in_elem).opacity) * 0.99;
-	window.setTimeout(() => {
-		in_elem.style.opacity = stored;
-	}, 0);
-}
-
-function isFirefox()
-{
-	return (window.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1);
-}
-
 function isElemNode(in_nodeName)
 {
 	return function(in_node) {
@@ -94,9 +80,6 @@ class selectionController {
 			return;
 		}
 		in_elem.dataset[this.__attrName] = this.__attrValue;
-		if (isFirefox()) {
-			forceRedraw(in_elem);
-		}
 	}
 	isDisabled(in_elem) {
 		return (in_elem.dataset[this.__attrName] === this.__attrValue);
@@ -106,9 +89,6 @@ class selectionController {
 			return;
 		}
 		delete in_elem.dataset[this.__attrName];
-		if (isFirefox()) {
-			forceRedraw(in_elem);
-		}
 	}
 	isEnabled(in_elem) {
 		return !(in_elem.dataset[this.__attrName]);
