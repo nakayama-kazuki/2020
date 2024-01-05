@@ -26,6 +26,20 @@ function createUniqueString()
 	return  'x' + Math.random().toString(32).substring(2);
 }
 
+function forceRedraw(in_elem)
+{
+	let stored = in_elem.style.opacity;
+	in_elem.style.opacity = Number.parseFloat(window.getComputedStyle(in_elem).opacity) * 0.99;
+	window.setTimeout(() => {
+		in_elem.style.opacity = stored;
+	}, 0);
+}
+
+function isFirefox()
+{
+	return (window.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1);
+}
+
 function isElemNode(in_nodeName)
 {
 	return function(in_node) {
@@ -144,6 +158,9 @@ class tableSelectionController extends selectionController {
 			this.disable(cell);
 		});
 		this.enable(this.__cache.startCell);
+		if (isFirefox()) {
+			forceRedraw(this.__table);
+		}
 	}
 	__update_2() {
 		// enable cells in boundRect
@@ -155,6 +172,10 @@ class tableSelectionController extends selectionController {
 				this.disable(cell);
 			}
 		});
+		this.enable(this.__cache.startCell);
+		if (isFirefox()) {
+			forceRedraw(this.__table);
+		}
 	}
 	__inSameTable(in_cell) {
 		return (this.__table === in_cell.closest('TABLE'));
@@ -167,6 +188,10 @@ class tableSelectionController extends selectionController {
 		this.__table[allCells](cell => {
 			this.enable(cell);
 		});
+		this.enable(this.__cache.startCell);
+		if (isFirefox()) {
+			forceRedraw(this.__table);
+		}
 		this.__cache = null;
 	}
 	update(in_elem) {
@@ -213,36 +238,6 @@ const gSelection = new tableSelectionController();
 	d.styleSheets[d.styleSheets.length - 1].insertRule(gSelection.createStyle());
 })(document);
 
-const RIGHT_BUTTON = 1;
-
-function handleMouseMove(in_ev)
-{
-	if (in_ev.buttons != RIGHT_BUTTON) {
-		return;
-	}
-	gSelection.update(in_ev.target);
-}
-
-function handleMouseDown(in_ev)
-{
-	collapseSelection();
-	gSelection.stop();
-}
-
-function handleMouseLeave(in_ev)
-{
-	if (in_ev.buttons != RIGHT_BUTTON) {
-		// why checking before collapse : my favorite ux
-		collapseSelection();
-	}
-	gSelection.stop();
-	let table = in_ev.target.closest('table');
-	table.removeEventListener('mousemove', handleMouseMove);
-	table.removeEventListener('mousedown', handleMouseDown);
-	table.removeEventListener('mouseleave', handleMouseLeave);
-	console.log('selection stopped');
-}
-
 HTMLTableElement.prototype[getSelectedData] = function() {
 	let rows = [];
 	if (!gSelection.updating()) {
@@ -286,6 +281,40 @@ HTMLTableElement.prototype[getSelectedData] = function() {
 	// remove empty
 	return rows.filter(row => {return row;});
 };
+
+const RIGHT_BUTTON = 1;
+
+function handleMouseMove(in_ev)
+{
+	if (in_ev.buttons != RIGHT_BUTTON) {
+		return;
+	}
+	gSelection.update(in_ev.target);
+}
+
+function handleMouseDown(in_ev)
+{
+	collapseSelection();
+	gSelection.stop();
+}
+
+function handleMouseLeave(in_ev)
+{
+	let table = in_ev.target;
+	if (!isElemNode('TABLE')(table)) {
+		console.log('!! something wrong');
+		return;
+	}
+	if (in_ev.buttons != RIGHT_BUTTON) {
+		// why checking before collapse : my favorite ux
+		collapseSelection();
+	}
+	gSelection.stop();
+	table.removeEventListener('mousemove', handleMouseMove);
+	table.removeEventListener('mousedown', handleMouseDown);
+	table.removeEventListener('mouseleave', handleMouseLeave);
+	console.log('selection stopped');
+}
 
 document.addEventListener('selectstart', ev => {
 	let table = ev.composedPath().find(isElemNode('TABLE'));
