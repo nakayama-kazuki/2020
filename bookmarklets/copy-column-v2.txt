@@ -1,19 +1,7 @@
-(async function(w, d) {
+(async function() {
 
-function createUnique()
-{
-	/* return  '_' + Math.random().toString(32).substring(2); */
-	return Symbol();
-}
-
-const target = createUnique();
-const startCustomSelect = createUnique();
-const getSelectedData = createUnique();
-
-const DATAATTR = {
-	N : 'selection',
-	V : 'disabled'
-};
+const allCells = Symbol();
+const getSelectedData = Symbol();
 
 const STR = (obj => {
 	let ret = {};
@@ -27,153 +15,247 @@ const STR = (obj => {
 	SP : 32
 });
 
-d.getElementsByTagName('*').item(0).appendChild(d.createElement('STYLE'));
-let attrsel = '[data-' + DATAATTR.N + '="' + DATAATTR.V + '"]';
-let style =
-	'TH' + attrsel +
-	'::selection,' +
-	'TH' + attrsel + STR.SP + '*' +
-	'::selection,' +
-	'TD' + attrsel +
-	'::selection,' +
-	'TD' + attrsel + STR.SP + '*' +
-	'::selection' +
-	'{background-color: transparent !important;}';
-d.styleSheets[d.styleSheets.length - 1].insertRule(style);
+function createUniqueString()
+{
+	return  'x' + Math.random().toString(32).substring(2);
+}
 
 function forceRedraw(in_elem)
 {
 	let stored = in_elem.style.opacity;
-	in_elem.style.opacity = Number.parseFloat(w.getComputedStyle(in_elem).opacity) * 0.99;
+	in_elem.style.opacity = Number.parseFloat(window.getComputedStyle(in_elem).opacity) * 0.99;
 	window.setTimeout(() => {
 		in_elem.style.opacity = stored;
 	}, 0);
 }
 
-function funcNodeIsElem(...in_nodeNames)
+function isFirefox()
+{
+	return (window.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1);
+}
+
+function isElemNode(in_nodeName)
 {
 	return function(in_node) {
 		if (in_node.nodeType === Node.ELEMENT_NODE) {
-			for (let nodeName of in_nodeNames) {
-				if (in_node.nodeName.toUpperCase() === nodeName) {
-					return true;
-				}
+			if (in_node.nodeName.toUpperCase() === in_nodeName.toUpperCase()) {
+				return true;
 			}
 		}
 		return false;
 	};
 }
 
-HTMLTableElement.prototype[startCustomSelect] = function() {
-	if (this[target]) {
-		return;
+function collapseSelection()
+{
+	let selection = window.getSelection();
+	for (let i = 0; i < selection.rangeCount; i++) {
+		selection.getRangeAt(i).collapse();
 	}
-	this[target] = {};
-	this[target].rect = {
-		T : Number.POSITIVE_INFINITY,
-		L : Number.POSITIVE_INFINITY,
-		B : Number.NEGATIVE_INFINITY,
-		R : Number.NEGATIVE_INFINITY
-	};
-	this[target].updateRect = (function(in_el) {
-		let updated = false;
-		if (this[target].rect.T > in_el.offsetTop) {
-			this[target].rect.T = in_el.offsetTop;
-			updated = true;
+}
+
+class selectionController {
+	#nodeNames = [];
+	constructor(...in_nodeNames) {
+		in_nodeNames.forEach(nodeName => {
+			this.#nodeNames.push(nodeName);
+		});
+	}
+	#attrName = createUniqueString();
+	#attrValue = createUniqueString();
+	#attrSelector() {
+		return '[data-' + this.#attrName + '="' + this.#attrValue + '"]';
+	}
+	createStyle() {
+		let buff = [];
+		this.#nodeNames.forEach(nodeName => {
+			buff.push(nodeName + this.#attrSelector() + '::selection');
+			// descendant selector
+			buff.push(nodeName + this.#attrSelector() + STR.SP + '*' + '::selection');
+		});
+		return buff.join(',') + '{background-color: transparent !important;}';
+	}
+	disable(in_elem) {
+		if (this.isDisabled(in_elem)) {
+			return;
 		}
-		if (this[target].rect.L > in_el.offsetLeft) {
-			this[target].rect.L = in_el.offsetLeft;
-			updated = true;
+		in_elem.dataset[this.#attrName] = this.#attrValue;
+		if (isFirefox()) {
+			forceRedraw(in_elem);
 		}
-		if (this[target].rect.B < in_el.offsetTop + in_el.offsetHeight) {
-			this[target].rect.B = in_el.offsetTop + in_el.offsetHeight
-			updated = true;
+	}
+	isDisabled(in_elem) {
+		return (in_elem.dataset[this.#attrName] === this.#attrValue);
+	}
+	enable(in_elem) {
+		if (this.isEnabled(in_elem)) {
+			return;
 		}
-		if (this[target].rect.R < in_el.offsetLeft + in_el.offsetWidth) {
-			this[target].rect.R = in_el.offsetLeft + in_el.offsetWidth;
-			updated = true;
+		delete in_elem.dataset[this.#attrName];
+		if (isFirefox()) {
+			forceRedraw(in_elem);
 		}
-		return updated;
-	}).bind(this);
-	this[target].inRect = (function(in_el) {
-		if (this[target].rect.T > in_el.offsetTop) {
+	}
+	isEnabled(in_elem) {
+		return !(in_elem.dataset[this.#attrName]);
+	}
+}
+
+HTMLTableElement.prototype[allCells] = function(in_callback) {
+	Array.from(this.rows).forEach(in_row => {
+		Array.from(in_row.cells).forEach(in_cell => {
+			(in_callback)(in_cell);
+		});
+	});
+}
+
+class tableSelectionController extends selectionController {
+	#nodeNames;
+	constructor() {
+		let nodeNames = ['TD', 'TH'];
+		super(...nodeNames);
+		this.#nodeNames = nodeNames;
+	}
+	#cache = null;
+	get #table() {
+		return this.#cache.startCell.closest('TABLE');
+	}
+	#calcBoundRect() {
+		let r = {};
+		let s = this.#cache.startCell;
+		let c = this.#cache.currentCell;
+		r.offsetLeft = Math.min(s.offsetLeft, c.offsetLeft);
+		r.offsetTop = Math.min(s.offsetTop, c.offsetTop);
+		r.offsetWidth = Math.max(s.offsetLeft + s.offsetWidth, c.offsetLeft + c.offsetWidth) - r.offsetLeft;
+		r.offsetHeight = Math.max(s.offsetTop + s.offsetHeight, c.offsetTop + c.offsetHeight) - r.offsetTop;
+		return r;
+	}
+	#inRect(in_rect, in_cell) {
+		if (in_rect.offsetLeft > in_cell.offsetLeft) {
 			return false;
 		}
-		if (this[target].rect.L > in_el.offsetLeft) {
+		if (in_rect.offsetTop > in_cell.offsetTop) {
 			return false;
 		}
-		if (this[target].rect.B < in_el.offsetTop + in_el.offsetHeight) {
+		if (in_rect.offsetLeft + in_rect.offsetWidth < in_cell.offsetLeft + in_cell.offsetWidth) {
 			return false;
 		}
-		if (this[target].rect.R < in_el.offsetLeft + in_el.offsetWidth) {
+		if (in_rect.offsetTop + in_rect.offsetHeight < in_cell.offsetTop + in_cell.offsetHeight) {
 			return false;
 		}
 		return true;
-	}).bind(this);
-	this[target].updateDataset = (function() {
-		for (let j = 0; j < this.rows.length; j++) {
-			let row = this.rows.item(j);
-			for (let i = 0; i < row.cells.length; i++) {
-				let cell = row.cells.item(i);
-				if (!cell.dataset[DATAATTR.N]) {
-					continue;
-				}
-				if (this[target].inRect(cell)) {
-					console.log('added target (' + j + ', ' + i + ')');
-					delete cell.dataset[DATAATTR.N];
-				}
-			}
-		}
-	}).bind(this);
-	this[target].handleMouseMove = (function(ev) {
-		const right_button = 1;
-		if (ev.buttons != right_button) {
-			console.log('without right button');
-			return;
-		}
-		if (!(funcNodeIsElem('TH', 'TD'))(ev.target)) {
-			console.log('not TH/TD');
-			return;
-		}
-		if (ev.target.dataset[DATAATTR.N] === DATAATTR.V) {
-			if (this[target].updateRect(ev.target)) {
-				this[target].updateDataset();
-			}
-		}
-	}).bind(this);
-	this[target].handleMouseLeave = (function(ev) {
-		const right_button = 1;
-		if (ev.buttons != right_button) {
-			/* for my favorite ux :-p */
-			w.getSelection().getRangeAt(0).collapse();
-		}
-		Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
-			delete cell.dataset[DATAATTR.N];
+	}
+	#update_1() {
+		// enable only 1 cell ( = startCell )
+		this.#table[allCells](cell => {
+			this.disable(cell);
 		});
-		if (w.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1) {
-			console.log('use trick for Firefox');
-			forceRedraw(this);
+		this.enable(this.#cache.startCell);
+	}
+	#update_2() {
+		// enable cells in boundRect
+		let boundRect = this.#calcBoundRect();
+		this.#table[allCells](cell => {
+			if (this.#inRect(boundRect, cell)) {
+				this.enable(cell);
+			} else {
+				this.disable(cell);
+			}
+		});
+	}
+	#inSameTable(in_cell) {
+		return (this.#table === in_cell.closest('TABLE'));
+	}
+	stop() {
+		if (!this.#cache) {
+			return;
 		}
-		this.removeEventListener('mousemove', this[target].handleMouseMove);
-		this.removeEventListener('mouseleave', this[target].handleMouseLeave);
-		console.log('stopped');
-		delete this[target];
-	}).bind(this);
-	this.addEventListener('mousemove', this[target].handleMouseMove);
-	this.addEventListener('mouseleave', this[target].handleMouseLeave);
-	/* all clear when restart */
-	Array.prototype.slice.call(this.querySelectorAll('TH, TD')).forEach(cell => {
-		cell.dataset[DATAATTR.N] = DATAATTR.V;
-	});
-	console.log('started');
-};
+		// enable all cells ( = initialize )
+		this.#table[allCells](cell => {
+			this.enable(cell);
+		});
+		this.#cache = null;
+	}
+	update(in_elem) {
+		let isCell = false;
+		for (let i = 0; i < this.#nodeNames.length; i++) {
+			if (isElemNode(this.#nodeNames[i])(in_elem)) {
+				isCell = true;
+				break;
+			}
+		}
+		if (!isCell) {
+			return;
+		}
+		if (this.#cache) {
+			if (this.#cache.currentCell === in_elem) {
+				// don't need to update
+				return;
+			}
+			if (this.#inSameTable(in_elem)) {
+				this.#cache.currentCell = in_elem;
+				this.#update_2();
+			} else {
+				this.stop();
+				this.update(in_elem);
+				console.log(' !! move to other table');
+			}
+		} else {
+			this.#cache = {
+				startCell : in_elem,
+				currentCell : in_elem
+			};
+			this.#update_1();
+		}
+	}
+	updating() {
+		return !!this.#cache;
+	}
+}
+
+const gSelection = new tableSelectionController();
+
+(d => {
+	d.getElementsByTagName('*').item(0).appendChild(d.createElement('STYLE'));
+	d.styleSheets[d.styleSheets.length - 1].insertRule(gSelection.createStyle());
+})(document);
+
+const RIGHT_BUTTON = 1;
+
+function handleMouseMove(in_ev)
+{
+	if (in_ev.buttons != RIGHT_BUTTON) {
+		return;
+	}
+	gSelection.update(in_ev.target);
+}
+
+function handleMouseDown(in_ev)
+{
+	collapseSelection();
+	gSelection.stop();
+}
+
+function handleMouseLeave(in_ev)
+{
+	if (in_ev.buttons != RIGHT_BUTTON) {
+		// why checking before collapse : my favorite ux
+		collapseSelection();
+	}
+	gSelection.stop();
+	let table = in_ev.target.closest('table');
+	table.removeEventListener('mousemove', handleMouseMove);
+	table.removeEventListener('mousedown', handleMouseDown);
+	table.removeEventListener('mouseleave', handleMouseLeave);
+	console.log('selection stopped');
+}
 
 HTMLTableElement.prototype[getSelectedData] = function() {
 	let rows = [];
-	if (!this[target]) {
+	if (!gSelection.updating()) {
 		return rows;
 	}
-	let range = w.getSelection().getRangeAt(0);
+	let range = window.getSelection().getRangeAt(0);
 	let s_cell = range.startContainer.parentElement.closest('TH, TD');
 	let e_cell = range.endContainer.parentElement.closest('TH, TD');
 	let _index = function(in_cell) {
@@ -197,7 +279,7 @@ HTMLTableElement.prototype[getSelectedData] = function() {
 				rows[_cur_rowIndex].push(e_cell.innerText.substring(0, range.endOffset));
 				_in_range = false;
 			} else {
-				if (!cell.dataset[DATAATTR.N]) {
+				if (gSelection.isEnabled(cell)) {
 					rows[_cur_rowIndex].push(cell.innerText);
 				}
 			}
@@ -208,27 +290,30 @@ HTMLTableElement.prototype[getSelectedData] = function() {
 			}
 		}
 	});
-	/* remove empty */
+	// remove empty
 	return rows.filter(row => {return row;});
 };
 
-d.addEventListener('selectstart', ev => {
-	let table = ev.composedPath().find(funcNodeIsElem('TABLE'));
+document.addEventListener('selectstart', ev => {
+	let table = ev.composedPath().find(isElemNode('TABLE'));
 	if (!table) {
-		/* not in table */
+		// not in table
 		return;
 	}
 	if (table.getElementsByTagName('TABLE').length > 0) {
-		/* target should be inner table */
+		// target should be inner table
 		return;
 	}
-	table[startCustomSelect]();
+	table.addEventListener('mousemove', handleMouseMove);
+	table.addEventListener('mousedown', handleMouseDown);
+	table.addEventListener('mouseleave', handleMouseLeave);
+	console.log('selection started');
 });
 
-d.addEventListener('copy', ev => {
+document.addEventListener('copy', ev => {
 	let rows = [];
-	Array.prototype.slice.call(d.getElementsByTagName('TABLE')).forEach(tbl => {
-		rows = rows.concat(tbl[getSelectedData]());
+	Array.prototype.slice.call(document.getElementsByTagName('TABLE')).forEach(table => {
+		rows = rows.concat(table[getSelectedData]());
 	});
 	if (rows.length > 0) {
 		for (let i = 0; i < rows.length; i++) {
@@ -237,7 +322,8 @@ d.addEventListener('copy', ev => {
 		(async (in_text) => {
 			await navigator.clipboard.writeText(in_text);
 		})(rows.join(STR.LF));
+		ev.preventDefault();
 	}
 });
 
-})(window, document);
+})();
