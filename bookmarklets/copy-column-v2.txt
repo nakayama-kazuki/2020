@@ -1,3 +1,9 @@
+// ==ClosureCompiler==
+// @output_file_name copy-column-v2.js
+// @compilation_level SIMPLE_OPTIMIZATIONS
+// @language_out ECMASCRIPT_2017
+// ==/ClosureCompiler==
+
 (async function() {
 
 const allCells = Symbol();
