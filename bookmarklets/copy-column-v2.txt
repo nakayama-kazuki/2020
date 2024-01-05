@@ -60,24 +60,32 @@ function collapseSelection()
 	}
 }
 
+/*
+	At this moment, ClosureCompiler doesn't support private fields.
+	So, after supporting, replace '__' to '#'.
+	In addition, public class fields seem to be required to be defined in constructor.
+	ClosureCompiler said "This language feature is only supported for UNSTABLE mode or better".
+	So, this also may be fixed in future.
+*/
+
 class selectionController {
-	#nodeNames = [];
 	constructor(...in_nodeNames) {
+		this.__nodeNames = [];
 		in_nodeNames.forEach(nodeName => {
-			this.#nodeNames.push(nodeName);
+			this.__nodeNames.push(nodeName);
 		});
+		this.__attrName = createUniqueString();
+		this.__attrValue = createUniqueString();
 	}
-	#attrName = createUniqueString();
-	#attrValue = createUniqueString();
-	#attrSelector() {
-		return '[data-' + this.#attrName + '="' + this.#attrValue + '"]';
+	__attrSelector() {
+		return '[data-' + this.__attrName + '="' + this.__attrValue + '"]';
 	}
 	createStyle() {
 		let buff = [];
-		this.#nodeNames.forEach(nodeName => {
-			buff.push(nodeName + this.#attrSelector() + '::selection');
+		this.__nodeNames.forEach(nodeName => {
+			buff.push(nodeName + this.__attrSelector() + '::selection');
 			// descendant selector
-			buff.push(nodeName + this.#attrSelector() + STR.SP + '*' + '::selection');
+			buff.push(nodeName + this.__attrSelector() + STR.SP + '*' + '::selection');
 		});
 		return buff.join(',') + '{background-color: transparent !important;}';
 	}
@@ -85,25 +93,25 @@ class selectionController {
 		if (this.isDisabled(in_elem)) {
 			return;
 		}
-		in_elem.dataset[this.#attrName] = this.#attrValue;
+		in_elem.dataset[this.__attrName] = this.__attrValue;
 		if (isFirefox()) {
 			forceRedraw(in_elem);
 		}
 	}
 	isDisabled(in_elem) {
-		return (in_elem.dataset[this.#attrName] === this.#attrValue);
+		return (in_elem.dataset[this.__attrName] === this.__attrValue);
 	}
 	enable(in_elem) {
 		if (this.isEnabled(in_elem)) {
 			return;
 		}
-		delete in_elem.dataset[this.#attrName];
+		delete in_elem.dataset[this.__attrName];
 		if (isFirefox()) {
 			forceRedraw(in_elem);
 		}
 	}
 	isEnabled(in_elem) {
-		return !(in_elem.dataset[this.#attrName]);
+		return !(in_elem.dataset[this.__attrName]);
 	}
 }
 
@@ -116,27 +124,26 @@ HTMLTableElement.prototype[allCells] = function(in_callback) {
 }
 
 class tableSelectionController extends selectionController {
-	#nodeNames;
 	constructor() {
 		let nodeNames = ['TD', 'TH'];
 		super(...nodeNames);
-		this.#nodeNames = nodeNames;
+		this.__nodeNames = nodeNames;
+		this.__cache = null;
 	}
-	#cache = null;
-	get #table() {
-		return this.#cache.startCell.closest('TABLE');
+	get __table() {
+		return this.__cache.startCell.closest('TABLE');
 	}
-	#calcBoundRect() {
+	__calcBoundRect() {
 		let r = {};
-		let s = this.#cache.startCell;
-		let c = this.#cache.currentCell;
+		let s = this.__cache.startCell;
+		let c = this.__cache.currentCell;
 		r.offsetLeft = Math.min(s.offsetLeft, c.offsetLeft);
 		r.offsetTop = Math.min(s.offsetTop, c.offsetTop);
 		r.offsetWidth = Math.max(s.offsetLeft + s.offsetWidth, c.offsetLeft + c.offsetWidth) - r.offsetLeft;
 		r.offsetHeight = Math.max(s.offsetTop + s.offsetHeight, c.offsetTop + c.offsetHeight) - r.offsetTop;
 		return r;
 	}
-	#inRect(in_rect, in_cell) {
+	__inRect(in_rect, in_cell) {
 		if (in_rect.offsetLeft > in_cell.offsetLeft) {
 			return false;
 		}
@@ -151,41 +158,41 @@ class tableSelectionController extends selectionController {
 		}
 		return true;
 	}
-	#update_1() {
+	__update_1() {
 		// enable only 1 cell ( = startCell )
-		this.#table[allCells](cell => {
+		this.__table[allCells](cell => {
 			this.disable(cell);
 		});
-		this.enable(this.#cache.startCell);
+		this.enable(this.__cache.startCell);
 	}
-	#update_2() {
+	__update_2() {
 		// enable cells in boundRect
-		let boundRect = this.#calcBoundRect();
-		this.#table[allCells](cell => {
-			if (this.#inRect(boundRect, cell)) {
+		let boundRect = this.__calcBoundRect();
+		this.__table[allCells](cell => {
+			if (this.__inRect(boundRect, cell)) {
 				this.enable(cell);
 			} else {
 				this.disable(cell);
 			}
 		});
 	}
-	#inSameTable(in_cell) {
-		return (this.#table === in_cell.closest('TABLE'));
+	__inSameTable(in_cell) {
+		return (this.__table === in_cell.closest('TABLE'));
 	}
 	stop() {
-		if (!this.#cache) {
+		if (!this.__cache) {
 			return;
 		}
 		// enable all cells ( = initialize )
-		this.#table[allCells](cell => {
+		this.__table[allCells](cell => {
 			this.enable(cell);
 		});
-		this.#cache = null;
+		this.__cache = null;
 	}
 	update(in_elem) {
 		let isCell = false;
-		for (let i = 0; i < this.#nodeNames.length; i++) {
-			if (isElemNode(this.#nodeNames[i])(in_elem)) {
+		for (let i = 0; i < this.__nodeNames.length; i++) {
+			if (isElemNode(this.__nodeNames[i])(in_elem)) {
 				isCell = true;
 				break;
 			}
@@ -193,29 +200,29 @@ class tableSelectionController extends selectionController {
 		if (!isCell) {
 			return;
 		}
-		if (this.#cache) {
-			if (this.#cache.currentCell === in_elem) {
+		if (this.__cache) {
+			if (this.__cache.currentCell === in_elem) {
 				// don't need to update
 				return;
 			}
-			if (this.#inSameTable(in_elem)) {
-				this.#cache.currentCell = in_elem;
-				this.#update_2();
+			if (this.__inSameTable(in_elem)) {
+				this.__cache.currentCell = in_elem;
+				this.__update_2();
 			} else {
 				this.stop();
 				this.update(in_elem);
 				console.log(' !! move to other table');
 			}
 		} else {
-			this.#cache = {
+			this.__cache = {
 				startCell : in_elem,
 				currentCell : in_elem
 			};
-			this.#update_1();
+			this.__update_1();
 		}
 	}
 	updating() {
-		return !!this.#cache;
+		return !!this.__cache;
 	}
 }
 
